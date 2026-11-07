@@ -27,22 +27,17 @@
                     },
                     keyframes: {
                         fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(8px) scale(0.98)' },
+                            '0%': { opacity: '0', transform: 'translateY(6px) scale(0.99)' },
                             '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
                         },
-                        slideDown: {
-                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        pulseSlow: {
-                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-                            '50%': { opacity: '0.6', transform: 'scale(0.95)' }
+                        slideRight: {
+                            '0%': { opacity: '0', transform: 'translateX(-15px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' }
                         }
                     },
                     animation: {
-                        modalIn: 'fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        slideDown: 'slideDown 0.2s ease-out forwards',
-                        pulseSlow: 'pulseSlow 2.5s infinite ease-in-out'
+                        modalIn: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        slideRight: 'slideRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards'
                     }
                 }
             }
@@ -91,51 +86,26 @@
         .glow-emerald {
             box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
         }
-        .tab-btn {
-            position: relative;
-            transition: all 0.25s ease;
-        }
-        .tab-btn.active {
-            color: #ffffff;
-            font-weight: 700;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-12 selection:bg-purple-600 selection:text-white">
 
     <!-- TOP NAVIGATION HEADER -->
     <header class="border-b border-slate-800/80 bg-slate-950/90 sticky top-0 z-30 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
             
             <!-- Brand Logo & Business Tagline -->
-            <div class="flex items-center justify-between w-full md:w-auto">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" id="wavex-logo" class="h-9 w-auto object-contain transition duration-300 hover:scale-105" alt="WAVEX" onerror="this.outerHTML='<div class=\'flex items-center gap-1.5 font-black text-2xl tracking-tighter cursor-pointer\'><span class=\'text-purple-500\'>WAVE</span><span class=\'text-white bg-purple-600 px-2 py-0.5 rounded-lg shadow-lg shadow-purple-500/50\'>X</span></div>'">
-                    <div class="border-l border-slate-800 pl-3">
-                        <span class="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/30">BUSINESS</span>
-                        <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Gestão de Revendas & Flip Hardware</p>
-                    </div>
+            <div class="flex items-center gap-3">
+                <img src="logo.png" id="wavex-logo" class="h-9 w-auto object-contain transition duration-300 hover:scale-105" alt="WAVEX" onerror="this.outerHTML='<div class=\'flex items-center gap-1.5 font-black text-2xl tracking-tighter cursor-pointer\'><span class=\'text-purple-500\'>WAVE</span><span class=\'text-white bg-purple-600 px-2 py-0.5 rounded-lg shadow-lg shadow-purple-500/50\'>X</span></div>'">
+                <div class="border-l border-slate-800 pl-3">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/30">BUSINESS</span>
+                    <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Gestão de Revendas & Marketplace</p>
                 </div>
-
-                <!-- Mobile Action Button -->
-                <button onclick="openModal('itemModal')" class="md:hidden bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-2 rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40">
-                    <i class="fa-solid fa-plus"></i> Novo
-                </button>
             </div>
 
-            <!-- Main Nav Tabs & Controls -->
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+            <!-- Header Right Controls -->
+            <div class="flex items-center gap-3">
                 
-                <!-- Main Navigation Tabs (Estoque vs Central de Logs) -->
-                <nav class="flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl text-xs">
-                    <button id="navTabEstoque" onclick="switchMainTab('estoque')" class="tab-btn active px-3.5 py-1.5 rounded-lg text-white bg-purple-600/90 shadow-md transition flex items-center gap-1.5 font-bold">
-                        <i class="fa-solid fa-boxes-stacked"></i> Estoque
-                    </button>
-                    <button id="navTabLogs" onclick="switchMainTab('logs')" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5 font-medium">
-                        <i class="fa-solid fa-receipt"></i> Central de Logs
-                    </button>
-                </nav>
-
                 <!-- Animated Sliding Pill Operator Switcher (Arthur vs Bruno) -->
                 <div class="relative flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs select-none w-44 sm:w-48 h-9 shadow-inner">
                     <!-- Sliding Background Pill -->
@@ -150,26 +120,27 @@
                 </div>
 
                 <!-- Add Product CTA -->
-                <button onclick="openModal('itemModal')" class="hidden md:flex bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-lg shadow-purple-900/40 transition duration-300 hover:scale-105 items-center gap-2">
-                    <i class="fa-solid fa-plus"></i> Novo Item
+                <button onclick="openWizardModal()" class="bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-lg shadow-purple-900/40 transition duration-300 hover:scale-105 flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Novo Item</span>
                 </button>
 
-                <!-- Settings / Options Menu -->
+                <!-- Settings / Options Dropdown (Includes Logs, Import, Export, Password Reset) -->
                 <div class="relative inline-block text-left">
                     <button onclick="toggleDropdown()" class="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 transition hover:text-white">
                         <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
                     </button>
-                    <div id="settingsDropdown" class="hidden absolute right-0 mt-2 w-60 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl py-2 z-50 text-xs animate-slideDown">
+                    <div id="settingsDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl py-2 z-50 text-xs animate-modalIn">
+                        <button onclick="openLogsModal(); closeDropdown();" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-purple-300 font-bold flex items-center gap-2.5">
+                            <i class="fa-solid fa-receipt text-purple-400"></i> Central Completa de Logs
+                        </button>
+                        <hr class="border-slate-800 my-1">
                         <button onclick="exportData()" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-slate-300 flex items-center gap-2.5">
-                            <i class="fa-solid fa-file-export text-purple-400"></i> Exportar Backup (JSON)
+                            <i class="fa-solid fa-file-export text-cyan-400"></i> Exportar Backup (JSON)
                         </button>
                         <label class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-slate-300 flex items-center gap-2.5 cursor-pointer">
-                            <i class="fa-solid fa-file-import text-cyan-400"></i> Importar Backup (JSON)
+                            <i class="fa-solid fa-file-import text-emerald-400"></i> Importar Backup (JSON)
                             <input type="file" id="importInput" accept=".json" onchange="importData(event)" class="hidden">
                         </label>
-                        <button onclick="switchMainTab('logs'); closeDropdown();" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-slate-300 flex items-center gap-2.5">
-                            <i class="fa-solid fa-list-check text-emerald-400"></i> Ver Central de Logs
-                        </button>
                         <hr class="border-slate-800 my-1">
                         <button onclick="promptClearAllData()" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-rose-400 flex items-center gap-2.5 font-semibold">
                             <i class="fa-solid fa-shield-halved"></i> Limpar Todo o Banco (Com Senha)
@@ -200,7 +171,7 @@
                     <h2 class="text-xs font-extrabold text-white flex items-center gap-2">
                         Sessão Ativa: <span id="activeOperatorBadge" class="text-purple-400 text-sm font-black">Arthur</span>
                     </h2>
-                    <p class="text-[11px] text-slate-400">Novas adições, edições e apontamentos serão atribuídos a este operador.</p>
+                    <p class="text-[11px] text-slate-400">Operações e registros financeiros atribuídos ao operador selecionado.</p>
                 </div>
             </div>
 
@@ -216,402 +187,344 @@
             </div>
         </section>
 
-        <!-- TAB 1: ESTOQUE E GESTÃO FINANCEIRA -->
-        <div id="tabEstoqueView" class="space-y-6">
-
-            <!-- KPI METRICS OVERVIEW CARDS -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <!-- Total Invested -->
-                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Investimento Total</span>
-                        <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
-                            <i class="fa-solid fa-wallet"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div id="kpiInvested" class="text-2xl font-black text-white">R$ 0,00</div>
-                        <p class="text-[11px] text-slate-400 mt-1">Compras + Peças/Serviços</p>
+        <!-- KPI METRICS OVERVIEW CARDS (WITH INDIVIDUAL OPERATOR BREAKDOWN) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <!-- Operator Share Invested -->
+            <div class="glass-card rounded-2xl p-4 border border-purple-500/30 hover-lift bg-purple-950/20">
+                <div class="flex justify-between items-start">
+                    <span class="text-[11px] font-extrabold text-purple-300 uppercase tracking-wider" id="kpiOperatorInvestedLabel">Seu Investimento (Arthur)</span>
+                    <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-user-tag"></i>
                     </div>
                 </div>
-
-                <!-- Total Revenue -->
-                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Faturamento Bruto</span>
-                        <div class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">
-                            <i class="fa-solid fa-arrow-trend-up"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div id="kpiRevenue" class="text-2xl font-black text-white">R$ 0,00</div>
-                        <p class="text-[11px] text-slate-400 mt-1">Vendas Concluídas</p>
-                    </div>
+                <div class="mt-3">
+                    <div id="kpiOperatorInvested" class="text-2xl font-black text-purple-300">R$ 0,00</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Aporte de compra + peças inseridas por você</p>
                 </div>
-
-                <!-- Net Profit -->
-                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift glow-emerald">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Lucro Líquido Real</span>
-                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
-                            <i class="fa-solid fa-sack-dollar"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div id="kpiNetProfit" class="text-2xl font-black text-emerald-400">R$ 0,00</div>
-                        <p id="kpiRoi" class="text-[11px] text-emerald-300 font-medium mt-1">ROI Geral: 0%</p>
-                    </div>
-                </div>
-
-                <!-- Partner Division (Arthur & Bruno) -->
-                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[11px] font-extrabold text-purple-400 uppercase tracking-wider">Retorno Sócios</span>
-                        <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
-                            <i class="fa-solid fa-people-arrows"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2 space-y-1 text-xs">
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-300 font-medium">Arthur:</span>
-                            <strong id="kpiArthurShare" class="text-white font-bold">R$ 0,00</strong>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-300 font-medium">Bruno:</span>
-                            <strong id="kpiBrunoShare" class="text-purple-300 font-bold">R$ 0,00</strong>
-                        </div>
-                        <div class="text-[10px] text-slate-500 pt-1 border-t border-slate-800/80 text-right">Aportes + 50% Lucro</div>
-                    </div>
-                </div>
-
-                <!-- Stock Giro metrics -->
-                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Giro de Estoque</span>
-                        <div class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-sm">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-xs space-y-1">
-                        <div class="flex justify-between">
-                            <span class="text-amber-400">Prep: <strong id="kpiPrepCount">0</strong></span>
-                            <span class="text-sky-400">Anúncio: <strong id="kpiAnunciadoCount">0</strong></span>
-                        </div>
-                        <div class="flex justify-between text-emerald-400 font-bold">
-                            <span>Vendidos:</span>
-                            <span id="kpiVendidoCount">0</span>
-                        </div>
-                        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800 text-right">
-                            Média Giro: <strong id="kpiAvgDays" class="text-white">0 dias</strong>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CHARTS SECTION WITH FAN/OPENING ANIMATIONS -->
-            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Monthly Performance Chart -->
-                <div class="lg:col-span-2 glass-card rounded-2xl p-5 border border-slate-800">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-chart-column text-purple-400"></i> Evolução Mensal (Investimento vs Lucro)
-                        </h2>
-                    </div>
-                    <div class="h-60 relative w-full">
-                        <canvas id="financeChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Category Distribution Chart -->
-                <div class="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-cyan-400"></i> Mix de Categorias
-                        </h2>
-                    </div>
-                    <div class="h-56 relative w-full flex items-center justify-center">
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FILTERS AND SEARCH BAR -->
-            <section class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                    <!-- Search Input -->
-                    <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
-                        <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Buscar modelo, peça, defeito..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition duration-200">
-                    </div>
-
-                    <!-- Category Filter -->
-                    <select id="categoryFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
-                        <option value="ALL">Todas Categorias</option>
-                        <option value="PC / Informática">PC / Informática</option>
-                        <option value="Smartphone / Celular">Smartphone / Celular</option>
-                        <option value="Videogame / Console">Videogame / Console</option>
-                        <option value="Bicicleta / Veículo">Bicicleta / Veículo</option>
-                        <option value="Eletrodoméstico / Outros">Eletrodoméstico / Outros</option>
-                    </select>
-
-                    <!-- Status Filter -->
-                    <select id="statusFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
-                        <option value="ALL">Todos os Status</option>
-                        <option value="Em Preparação">Em Preparação</option>
-                        <option value="Anunciado">Anunciados</option>
-                        <option value="Vendido">Vendidos</option>
-                    </select>
-                </div>
-
-                <!-- Sort By -->
-                <div class="flex items-center gap-2 w-full md:w-auto justify-end text-xs text-slate-400">
-                    <span>Ordenar por:</span>
-                    <select id="sortOption" onchange="renderProjects()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
-                        <option value="date-desc">Mais Recentes</option>
-                        <option value="date-asc">Mais Antigos</option>
-                        <option value="profit-desc">Maior Lucro</option>
-                        <option value="cost-desc">Maior Investimento</option>
-                    </select>
-                </div>
-            </section>
-
-            <!-- PRODUCTS GRID -->
-            <section id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically generated product cards -->
-            </section>
-
-            <!-- EMPTY ESTOQUE STATE -->
-            <div id="emptyState" class="hidden text-center py-16 glass-card rounded-2xl border border-slate-800 animate-modalIn">
-                <div class="w-16 h-16 bg-slate-900 border border-purple-500/20 rounded-2xl flex items-center justify-center mx-auto text-purple-400 text-2xl mb-3 shadow-lg shadow-purple-900/20">
-                    <i class="fa-solid fa-box-open"></i>
-                </div>
-                <h3 class="text-base font-bold text-white">Nenhum produto cadastrado no estoque</h3>
-                <p class="text-xs text-slate-400 max-w-md mx-auto mt-1 mb-5">Seu banco de dados do WAVEX Business está zerado. Clique no botão abaixo para adicionar a primeira compra da dupla.</p>
-                <button onclick="openModal('itemModal')" class="px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40 transition duration-200 hover:scale-105">
-                    <i class="fa-solid fa-plus mr-1"></i> Cadastrar Primeiro Item
-                </button>
             </div>
-        </div>
 
-        <!-- TAB 2: CENTRAL DEDICADA DE LOGS & AUDITORIA -->
-        <div id="tabLogsView" class="hidden space-y-6 animate-modalIn">
-            <section class="glass-card rounded-2xl p-6 border border-slate-800">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-base font-black text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-purple-400"></i> Central Completa de Logs & Histórico de Operações
-                        </h2>
-                        <p class="text-xs text-slate-400 mt-1">Registro completo de todas as alterações, entradas, peças adicionadas e vendas realizadas por Arthur e Bruno.</p>
-                    </div>
-
-                    <!-- Log Filters -->
-                    <div class="flex flex-wrap items-center gap-3">
-                        <div class="relative w-48">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
-                            <input type="text" id="logSearchInput" oninput="renderCentralLogs()" placeholder="Filtrar histórico..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white outline-none focus:border-purple-500">
-                        </div>
-                        <select id="logOperatorFilter" onchange="renderCentralLogs()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-300 outline-none focus:border-purple-500">
-                            <option value="ALL">Todos Operadores</option>
-                            <option value="Arthur">Somente Arthur</option>
-                            <option value="Bruno">Somente Bruno</option>
-                        </select>
+            <!-- Total Invested by Partnership -->
+            <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                <div class="flex justify-between items-start">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Investimento Dupla</span>
+                    <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-wallet"></i>
                     </div>
                 </div>
-
-                <!-- Logs List Container -->
-                <div id="centralLogsList" class="mt-6 space-y-3">
-                    <!-- Injected dynamically -->
+                <div class="mt-3">
+                    <div id="kpiInvested" class="text-2xl font-black text-white">R$ 0,00</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Soma Arthur + Bruno</p>
                 </div>
-            </section>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                <div class="flex justify-between items-start">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Faturamento Bruto</span>
+                    <div class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div id="kpiRevenue" class="text-2xl font-black text-white">R$ 0,00</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Vendas Concluídas</p>
+                </div>
+            </div>
+
+            <!-- Net Profit -->
+            <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift glow-emerald">
+                <div class="flex justify-between items-start">
+                    <span class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Lucro Líquido Real</span>
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div id="kpiNetProfit" class="text-2xl font-black text-emerald-400">R$ 0,00</div>
+                    <p id="kpiRoi" class="text-[11px] text-emerald-300 font-medium mt-1">ROI Geral: 0%</p>
+                </div>
+            </div>
+
+            <!-- Stock Giro metrics -->
+            <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                <div class="flex justify-between items-start">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Giro de Estoque</span>
+                    <div class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                </div>
+                <div class="mt-2 text-xs space-y-1">
+                    <div class="flex justify-between">
+                        <span class="text-amber-400">Prep: <strong id="kpiPrepCount">0</strong></span>
+                        <span class="text-sky-400">Anúncio: <strong id="kpiAnunciadoCount">0</strong></span>
+                    </div>
+                    <div class="flex justify-between text-emerald-400 font-bold">
+                        <span>Vendidos:</span>
+                        <span id="kpiVendidoCount">0</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800 text-right">
+                        Média Giro: <strong id="kpiAvgDays" class="text-white">0 dias</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHARTS SECTION WITH FAN ANIMATION -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Monthly Performance Chart -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-5 border border-slate-800">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-purple-400"></i> Evolução Mensal (Investimento vs Lucro)
+                    </h2>
+                </div>
+                <div class="h-60 relative w-full">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Category Distribution Chart -->
+            <div class="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-cyan-400"></i> Mix de Categorias
+                    </h2>
+                </div>
+                <div class="h-56 relative w-full flex items-center justify-center">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- FILTERS AND SEARCH BAR -->
+        <section class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+                    <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Buscar produto..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition duration-200">
+                </div>
+
+                <!-- Category Filter -->
+                <select id="categoryFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
+                    <option value="ALL">Todas Categorias</option>
+                    <option value="PC">PC</option>
+                    <option value="Smartphone">Smartphone</option>
+                    <option value="Videogame">Videogame</option>
+                    <option value="Bicicleta">Bicicleta</option>
+                    <option value="Eletrodoméstico">Eletrodoméstico</option>
+                </select>
+
+                <!-- Status Filter -->
+                <select id="statusFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
+                    <option value="ALL">Todos os Status</option>
+                    <option value="Em Preparação">Em Preparação</option>
+                    <option value="Anunciado">Anunciados</option>
+                    <option value="Vendido">Vendidos</option>
+                </select>
+            </div>
+
+            <!-- Sort By -->
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end text-xs text-slate-400">
+                <span>Ordenar por:</span>
+                <select id="sortOption" onchange="renderProjects()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
+                    <option value="date-desc">Mais Recentes</option>
+                    <option value="date-asc">Mais Antigos</option>
+                    <option value="profit-desc">Maior Lucro</option>
+                    <option value="cost-desc">Maior Investimento</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- PRODUCTS GRID -->
+        <section id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards rendered dynamically -->
+        </section>
+
+        <!-- EMPTY ESTOQUE STATE -->
+        <div id="emptyState" class="hidden text-center py-16 glass-card rounded-2xl border border-slate-800 animate-modalIn">
+            <div class="w-16 h-16 bg-slate-900 border border-purple-500/20 rounded-2xl flex items-center justify-center mx-auto text-purple-400 text-2xl mb-3 shadow-lg shadow-purple-900/20">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">Estoque Zerado</h3>
+            <p class="text-xs text-slate-400 max-w-md mx-auto mt-1 mb-5">Nenhum item cadastrado no sistema. Clique abaixo para iniciar o cadastro em etapas.</p>
+            <button onclick="openWizardModal()" class="px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40 transition duration-200 hover:scale-105">
+                <i class="fa-solid fa-plus mr-1"></i> Cadastrar Primeiro Item
+            </button>
         </div>
 
     </main>
 
-    <!-- MODAL: ADD / EDIT PRODUCT ITEM -->
-    <div id="itemModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-card rounded-2xl w-full max-w-3xl border border-slate-700 shadow-2xl my-8 overflow-hidden text-slate-200 animate-modalIn">
+    <!-- WIZARD MODAL (MULTISTEP 1 -> 4) -->
+    <div id="wizardModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card rounded-2xl w-full max-w-2xl border border-slate-700 shadow-2xl my-8 overflow-hidden text-slate-200 animate-modalIn">
             
-            <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950">
-                <h3 id="modalTitle" class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Item no WAVEX Business
-                </h3>
-                <button onclick="closeModal('itemModal')" class="text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+            <!-- Wizard Header & Progress Steps -->
+            <div class="px-6 py-4 border-b border-slate-800 bg-slate-950 flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <h3 id="wizardTitle" class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Novo Produto
+                    </h3>
+                    <button onclick="closeModal('wizardModal')" class="text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Step Indicator Bar -->
+                <div class="grid grid-cols-4 gap-2 text-center text-[10px] font-bold">
+                    <div id="stepIndicator1" class="py-1.5 rounded-lg bg-purple-600 text-white transition">1. Básico</div>
+                    <div id="stepIndicator2" class="py-1.5 rounded-lg bg-slate-900 text-slate-500 border border-slate-800 transition">2. Specs</div>
+                    <div id="stepIndicator3" class="py-1.5 rounded-lg bg-slate-900 text-slate-500 border border-slate-800 transition">3. Compra</div>
+                    <div id="stepIndicator4" class="py-1.5 rounded-lg bg-slate-900 text-slate-500 border border-slate-800 transition">4. Fotos</div>
+                </div>
             </div>
 
-            <!-- Modal Form -->
-            <form id="itemForm" onsubmit="saveProject(event)" class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
-                <input type="hidden" id="itemId">
+            <!-- Wizard Form Body -->
+            <form id="wizardForm" onsubmit="saveWizardProject(event)" class="p-6">
+                <input type="hidden" id="wizardItemId">
 
-                <!-- Section 1: Categoria & Identificação -->
-                <div>
-                    <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-list-check"></i> 1. Categoria & Identificação
-                    </h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Produto / Projeto *</label>
-                            <input type="text" id="projectName" required placeholder="Ex: PC Gamer i3/GTX 750 ou iPhone 11 64GB" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-500 outline-none">
-                        </div>
+                <!-- STEP 1: INFORMAÇÕES BÁSICAS -->
+                <div id="wizardStep1" class="space-y-4 animate-slideRight">
+                    <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider">Etapa 1: Informações Básicas</h4>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Produto *</label>
+                        <input type="text" id="wName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Categoria do Produto *</label>
-                            <select id="projectCategory" onchange="toggleCategoryFields()" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-500 outline-none">
-                                <option value="PC / Informática">PC / Informática</option>
-                                <option value="Smartphone / Celular">Smartphone / Celular</option>
-                                <option value="Videogame / Console">Videogame / Console</option>
-                                <option value="Bicicleta / Veículo">Bicicleta / Veículo</option>
-                                <option value="Eletrodoméstico / Outros">Eletrodoméstico / Outros</option>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Categoria *</label>
+                            <select id="wCategory" onchange="updateWizardSpecsFields()" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
+                                <option value="PC">PC</option>
+                                <option value="Smartphone">Smartphone</option>
+                                <option value="Videogame">Videogame</option>
+                                <option value="Bicicleta">Bicicleta</option>
+                                <option value="Eletrodoméstico">Eletrodoméstico</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Status do Projeto *</label>
-                            <select id="projectStatus" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-500 outline-none">
+                            <select id="wStatus" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                                 <option value="Em Preparação">Em Preparação</option>
                                 <option value="Anunciado">Anunciado</option>
                                 <option value="Vendido">Vendido</option>
                             </select>
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Acessórios / Brindes Inicialmente Incluídos</label>
-                            <input type="text" id="specPeripherals" placeholder="Ex: Teclado gamer brinde, carregador original, capa..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:border-purple-500 outline-none">
-                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Acessórios Inclusos</label>
+                        <input type="text" id="wPeripherals" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-purple-500">
                     </div>
                 </div>
 
-                <!-- Section 2: Dynamic Category Specs -->
-                <div class="pt-3 border-t border-slate-800">
-                    <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i> 2. Especificações (<span id="categoryLabel">PC / Informática</span>)
-                    </h4>
-                    
-                    <!-- Dynamic Box: PC -->
-                    <div id="fieldsPC" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                <!-- STEP 2: ESPECIFICAÇÕES TÉCNICAS -->
+                <div id="wizardStep2" class="hidden space-y-4 animate-slideRight">
+                    <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Etapa 2: Especificações Técnicas</h4>
+
+                    <!-- Dynamic Category Specs (Clean Fields) -->
+                    <div id="wSpecsPC" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
                         <div>
-                            <label class="block text-slate-300 mb-1">Processador (CPU)</label>
-                            <input type="text" id="pcCpu" placeholder="Ex: i3 2100 (Socket LGA 1155)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <label class="block text-slate-300 mb-1">Processador</label>
+                            <input type="text" id="wCpu" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Placa-Mãe</label>
-                            <input type="text" id="pcMobo" placeholder="Ex: H61 LGA 1155" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wMobo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
-                            <label class="block text-slate-300 mb-1">Placa de Vídeo (GPU)</label>
-                            <input type="text" id="pcGpu" placeholder="Ex: GTX 750 2GB" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <label class="block text-slate-300 mb-1">Placa de Vídeo</label>
+                            <input type="text" id="wGpu" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Memória RAM</label>
-                            <input type="text" id="pcRam" placeholder="Ex: 8GB DDR3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wRam" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Fonte</label>
-                            <input type="text" id="pcPsu" placeholder="Ex: 500W Real" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Gabinete / Armazenamento</label>
-                            <input type="text" id="pcCase" placeholder="Ex: Gabinete RGB com Fans / SSD 240GB" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Box: Smartphone -->
-                    <div id="fieldsPhone" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 mb-1">Modelo</label>
-                            <input type="text" id="phoneModel" placeholder="Ex: iPhone 11" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Armazenamento GB</label>
-                            <input type="text" id="phoneStorage" placeholder="Ex: 64 GB" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Saúde Bateria %</label>
-                            <input type="text" id="phoneBattery" placeholder="Ex: 84%" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Estado Tela/Carcaça</label>
-                            <input type="text" id="phoneCondition" placeholder="Ex: Com marcas leves na lateral" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Box: Console -->
-                    <div id="fieldsConsole" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 mb-1">Modelo Console</label>
-                            <input type="text" id="consoleModel" placeholder="Ex: Playstation 4 Slim" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wPsu" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Armazenamento</label>
-                            <input type="text" id="consoleStorage" placeholder="Ex: 1TB" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Qtd. Controles</label>
-                            <input type="text" id="consoleControllers" placeholder="Ex: 2 Controles" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Jogos Inclusos</label>
-                            <input type="text" id="consoleGames" placeholder="Ex: FIFA + GTA V" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wStorage" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                     </div>
 
-                    <!-- Dynamic Box: Bicicleta / Veículo -->
-                    <div id="fieldsBike" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                    <div id="wSpecsPhone" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                         <div>
-                            <label class="block text-slate-300 mb-1">Marca / Modelo</label>
-                            <input type="text" id="bikeModel" placeholder="Ex: Caloi Two Niner" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <label class="block text-slate-300 mb-1">Modelo</label>
+                            <input type="text" id="wPhoneModel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 mb-1">Armazenamento</label>
+                            <input type="text" id="wPhoneStorage" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 mb-1">Saúde Bateria %</label>
+                            <input type="text" id="wPhoneBattery" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                        </div>
+                    </div>
+
+                    <div id="wSpecsConsole" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 mb-1">Modelo Console</label>
+                            <input type="text" id="wConsoleModel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 mb-1">Armazenamento</label>
+                            <input type="text" id="wConsoleStorage" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 mb-1">Controles / Jogos</label>
+                            <input type="text" id="wConsoleExtras" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                        </div>
+                    </div>
+
+                    <div id="wSpecsBike" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 mb-1">Modelo Bicicleta</label>
+                            <input type="text" id="wBikeModel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Aro / Quadro</label>
-                            <input type="text" id="bikeSize" placeholder="Ex: Aro 29 Quadro 17" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wBikeSize" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Grupo / Marchas</label>
-                            <input type="text" id="bikeGears" placeholder="Ex: Shimano 21v" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Estado Geral</label>
-                            <input type="text" id="bikeCondition" placeholder="Ex: Freio a disco, pneus novos" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wBikeGears" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                     </div>
 
-                    <!-- Dynamic Box: Outros / Eletro -->
-                    <div id="fieldsOther" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                    <div id="wSpecsOther" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <div>
                             <label class="block text-slate-300 mb-1">Marca / Modelo</label>
-                            <input type="text" id="otherBrand" placeholder="Ex: Electrolux, Brastemp" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 mb-1">Voltagem / Especificação</label>
-                            <input type="text" id="otherVoltage" placeholder="Ex: 110V / Bivolt" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wOtherBrand" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-slate-300 mb-1">Condição Geral</label>
-                            <input type="text" id="otherCondition" placeholder="Ex: Seminovo, com caixa" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
+                            <input type="text" id="wOtherCondition" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         </div>
                     </div>
 
-                    <!-- Defect / Notes Box -->
-                    <div class="mt-3">
-                        <label class="block text-xs font-semibold text-amber-400 mb-1">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Defeitos / Observações / Detalhes do Negócio
-                        </label>
-                        <textarea id="projectNotes" rows="2" placeholder="Ex: Trincado leve na tampa traseira; precisa higienização; falta espelho da placa-mãe..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"></textarea>
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-400 mb-1">Defeitos / Observações</label>
+                        <textarea id="wNotes" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"></textarea>
                     </div>
                 </div>
 
-                <!-- Section 3: Compra & Origem (Aportes Arthur e Bruno) -->
-                <div class="pt-3 border-t border-slate-800">
-                    <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-hand-holding-dollar"></i> 3. Compra Inicial & Aportes dos Sócios
-                    </h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- STEP 3: COMPRA INICIAL & APORTES -->
+                <div id="wizardStep3" class="hidden space-y-4 animate-slideRight">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Etapa 3: Compra Inicial & Aportes</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Data / Hora Compra *</label>
-                            <input type="datetime-local" id="purchaseDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Data da Compra *</label>
+                            <input type="datetime-local" id="wPurchaseDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Plataforma da Compra</label>
-                            <select id="platformBuy" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            <select id="wPlatformBuy" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
                                 <option value="Facebook Marketplace">Facebook Marketplace</option>
                                 <option value="OLX">OLX</option>
                                 <option value="Mercado Livre">Mercado Livre</option>
@@ -620,213 +533,217 @@
                                 <option value="Outra">Outra</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Preço Compra Inicial (R$) *</label>
-                            <input type="number" step="0.01" id="initialPrice" oninput="splitInitialPrice()" required placeholder="470.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Preço Inicial Anunciado (R$)</label>
+                            <input type="number" step="0.01" id="wAdvertisedPrice" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">Plataforma Anúncio</label>
-                            <select id="platformAd" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                                <option value="Facebook Marketplace">Facebook Marketplace</option>
-                                <option value="OLX">OLX</option>
-                                <option value="Mercado Livre">Mercado Livre</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Múltiplas">Múltiplas Plataformas</option>
-                            </select>
+                            <label class="block text-xs font-semibold text-emerald-400 mb-1">Valor Pago na Compra (R$) *</label>
+                            <input type="number" step="0.01" id="wInitialPrice" oninput="autoSplitAportes()" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Preço Alvo de Venda (R$)</label>
+                            <input type="number" step="0.01" id="wTargetSalePrice" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                    <!-- Partner Capital Contribution -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">
-                                <i class="fa-solid fa-user text-purple-400 mr-1"></i> Aporte de Capital: Arthur (R$)
-                            </label>
-                            <input type="number" step="0.01" id="arthurShare" placeholder="235.00" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            <label class="block text-xs font-semibold text-purple-300 mb-1">Aporte Arthur (R$)</label>
+                            <input type="number" step="0.01" id="wArthurShare" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-purple-300 mb-1">
-                                <i class="fa-solid fa-user text-purple-400 mr-1"></i> Aporte de Capital: Bruno (R$)
-                            </label>
-                            <input type="number" step="0.01" id="brunoShare" placeholder="235.00" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3 py-2 text-xs text-purple-300 outline-none">
+                            <label class="block text-xs font-semibold text-purple-300 mb-1">Aporte Bruno (R$)</label>
+                            <input type="number" step="0.01" id="wBrunoShare" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 4: Venda & Fotos -->
-                <div class="pt-3 border-t border-slate-800">
-                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-tag"></i> 4. Informações da Venda
-                    </h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Preço Alvo / Pedido (R$)</label>
-                            <input type="number" step="0.01" id="targetSalePrice" placeholder="1000.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-emerald-400 mb-1">Preço Final Vendido (R$)</label>
-                            <input type="number" step="0.01" id="soldPrice" placeholder="Preço negociado" class="w-full bg-slate-950 border border-emerald-500/40 rounded-xl px-3 py-2 text-xs text-emerald-400 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Plataforma da Venda</label>
-                            <select id="platformSell" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                                <option value="Facebook Marketplace">Facebook Marketplace</option>
-                                <option value="OLX">OLX</option>
-                                <option value="Mercado Livre">Mercado Livre</option>
-                                <option value="Presencial / Direto">Presencial / Direto</option>
-                                <option value="Instagram / WhatsApp">Instagram / WhatsApp</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Data / Hora Venda</label>
-                            <input type="datetime-local" id="saleDate" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                        </div>
-                    </div>
+                <!-- STEP 4: GALERIA DE FOTOS MULTI-UPLOAD -->
+                <div id="wizardStep4" class="hidden space-y-4 animate-slideRight">
+                    <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Etapa 4: Adicionar Fotos do Produto</h4>
 
-                    <!-- Images Section -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
-                        <!-- Foto Compra -->
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                            <label class="block text-[11px] font-bold text-slate-400">1. Foto da Compra / Anúncio</label>
-                            <label class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg flex items-center justify-center gap-1 transition">
-                                <i class="fa-solid fa-upload"></i> Selecionar Imagem
-                                <input type="file" accept="image/*" onchange="handleFileUpload(event, 'photoBefore', 'previewBefore')" class="hidden">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex flex-col sm:flex-row items-center gap-3">
+                            <label class="cursor-pointer px-4 py-2 bg-purple-700 hover:bg-purple-600 text-xs text-white rounded-xl font-bold flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Upload de Fotos
+                                <input type="file" accept="image/*" multiple onchange="handleMultipleFiles(event)" class="hidden">
                             </label>
-                            <input type="url" id="photoBefore" oninput="updatePreviewFromUrl('photoBefore', 'previewBefore')" placeholder="https://..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-white outline-none">
-                            <div class="h-24 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-800">
-                                <img id="previewBefore" src="" class="hidden w-full h-full object-cover">
-                                <span id="placeholderBefore" class="text-[10px] text-slate-600">Sem Imagem</span>
-                            </div>
+                            <span class="text-slate-500 text-xs">ou adicionar via URL:</span>
                         </div>
 
-                        <!-- Foto Peças -->
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                            <label class="block text-[11px] font-bold text-amber-400">2. Foto das Peças / Upgrades</label>
-                            <label class="cursor-pointer px-3 py-1.5 bg-amber-950/40 border border-amber-500/30 hover:bg-amber-900/40 text-xs text-amber-200 rounded-lg flex items-center justify-center gap-1 transition">
-                                <i class="fa-solid fa-upload"></i> Selecionar Imagem
-                                <input type="file" accept="image/*" onchange="handleFileUpload(event, 'photoParts', 'previewParts')" class="hidden">
-                            </label>
-                            <input type="url" id="photoParts" oninput="updatePreviewFromUrl('photoParts', 'previewParts')" placeholder="https://..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-white outline-none">
-                            <div class="h-24 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-800">
-                                <img id="previewParts" src="" class="hidden w-full h-full object-cover">
-                                <span id="placeholderParts" class="text-[10px] text-slate-600">Sem Imagem</span>
-                            </div>
+                        <div class="flex gap-2">
+                            <input type="url" id="wPhotoUrlInput" placeholder="https://..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white outline-none">
+                            <button type="button" onclick="addPhotoFromUrl()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-xl transition">
+                                Adicionar
+                            </button>
                         </div>
 
-                        <!-- Foto Pronto -->
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                            <label class="block text-[11px] font-bold text-purple-300">3. Foto do Produto Pronto</label>
-                            <label class="cursor-pointer px-3 py-1.5 bg-purple-950/40 border border-purple-500/30 hover:bg-purple-900/40 text-xs text-purple-200 rounded-lg flex items-center justify-center gap-1 transition">
-                                <i class="fa-solid fa-upload"></i> Selecionar Imagem
-                                <input type="file" accept="image/*" onchange="handleFileUpload(event, 'photoAfter', 'previewAfter')" class="hidden">
-                            </label>
-                            <input type="url" id="photoAfter" oninput="updatePreviewFromUrl('photoAfter', 'previewAfter')" placeholder="https://..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-white outline-none">
-                            <div class="h-24 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-800">
-                                <img id="previewAfter" src="" class="hidden w-full h-full object-cover">
-                                <span id="placeholderAfter" class="text-[10px] text-slate-600">Sem Imagem</span>
-                            </div>
+                        <!-- Rendered Photos Preview Grid -->
+                        <div id="wPhotosGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-2">
+                            <!-- Injected dynamically -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer Buttons -->
-                <div class="pt-4 border-t border-slate-800 flex justify-end gap-3">
-                    <button type="button" onclick="closeModal('itemModal')" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition">
-                        Cancelar
+                <!-- Wizard Navigation Footer Buttons -->
+                <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center">
+                    <button type="button" id="btnWizardPrev" onclick="navigateWizard(-1)" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 text-xs font-bold rounded-xl transition">
+                        Voltar
                     </button>
-                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40 transition hover:scale-105">
-                        Salvar Item no WAVEX
+                    <button type="button" id="btnWizardNext" onclick="navigateWizard(1)" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-lg transition">
+                        Próximo <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                    <button type="submit" id="btnWizardSubmit" class="hidden px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-900/40 transition">
+                        Salvar Produto
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: ADD CONTRIBUTION / SERVICE / PART -->
-    <div id="contributionModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-card rounded-2xl w-full max-w-lg border border-slate-700 shadow-2xl my-8 overflow-hidden text-slate-200 animate-modalIn">
-            <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950">
-                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-puzzle-piece text-amber-400"></i> Adicionar Peça / Serviço / Acessório
-                </h3>
-                <button onclick="closeModal('contributionModal')" class="text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+    <!-- FULLSCREEN DETAILED ITEM MODAL (MARKETPLACE VIEW) -->
+    <div id="fullscreenDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl overflow-y-auto p-4 md:p-8 flex flex-col justify-between animate-modalIn">
+        
+        <!-- Header Controls -->
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+            <div>
+                <span id="fsCategoryBadge" class="text-[10px] font-bold text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/30 uppercase tracking-widest">PC</span>
+                <h2 id="fsTitle" class="text-xl font-black text-white mt-1">Nome do Produto</h2>
+            </div>
+            <button onclick="closeModal('fullscreenDetailModal')" class="p-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Main Content Area: Split Gallery & Info -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 my-6 flex-grow">
+            
+            <!-- Left Side: Large Photo Viewer (Cols 7) -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+                <div class="relative h-80 sm:h-[420px] w-full bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                    <img id="fsMainPhoto" src="" class="w-full h-full object-contain">
+                </div>
+                
+                <!-- Thumbnails Bar -->
+                <div id="fsThumbnails" class="flex items-center gap-3 overflow-x-auto pb-2">
+                    <!-- Injected dynamically -->
+                </div>
             </div>
 
-            <form id="contributionForm" onsubmit="saveContribution(event)" class="p-6 space-y-4">
-                <input type="hidden" id="contribItemId">
+            <!-- Right Side: Details & Financial Breakdown (Cols 5) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Status & Financial Card -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span id="fsStatusBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">Em Prep</span>
+                        <span id="fsGiroText" class="text-xs text-slate-400"></span>
+                    </div>
 
+                    <div class="space-y-2 pt-2 border-t border-slate-800">
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span>Valor Pago na Compra:</span>
+                            <strong id="fsInitialCost" class="text-slate-200">R$ 0,00</strong>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span>Adicionais (Peças/Serviços):</span>
+                            <strong id="fsUpgradesCost" class="text-amber-400">R$ 0,00</strong>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold text-white pt-1">
+                            <span>Custo Total Atual:</span>
+                            <span id="fsTotalCost" class="text-purple-400 font-extrabold">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-xl border border-purple-500/30 space-y-2 text-xs">
+                        <div class="flex justify-between text-slate-300">
+                            <span>Aporte Arthur: <strong id="fsArthurAporte" class="text-white">R$ 0,00</strong></span>
+                            <span>Retorno Arthur: <strong id="fsArthurReturn" class="text-emerald-400">R$ 0,00</strong></span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span>Aporte Bruno: <strong id="fsBrunoAporte" class="text-white">R$ 0,00</strong></span>
+                            <span>Retorno Bruno: <strong id="fsBrunoReturn" class="text-emerald-400">R$ 0,00</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specs Box -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3 text-xs">
+                    <h3 class="font-bold text-purple-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> Especificações Técnicas
+                    </h3>
+                    <div id="fsSpecsContainer" class="grid grid-cols-2 gap-3 text-slate-300">
+                        <!-- Injected -->
+                    </div>
+                </div>
+
+                <!-- Added Contributions List -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3 text-xs">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-packing"></i> Peças & Serviços Adicionados
+                        </h3>
+                        <button id="fsBtnAddPart" onclick="" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition">
+                            + Peça
+                        </button>
+                    </div>
+                    <div id="fsContributionsList" class="space-y-2">
+                        <!-- Injected -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD CONTRIBUTION -->
+    <div id="contributionModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-lg border border-slate-700 p-6 space-y-4 animate-modalIn text-xs">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+                <h3 class="font-bold text-white uppercase tracking-wider">Adicionar Peça / Serviço</h3>
+                <button onclick="closeModal('contributionModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <form onsubmit="saveContribution(event)" class="space-y-3">
+                <input type="hidden" id="contribItemId">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Quem adicionou este item / serviço? *</label>
-                    <select id="contribOperator" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                    <label class="block text-slate-300 mb-1">Quem Adicionou?</label>
+                    <select id="contribOperator" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                         <option value="Arthur">Arthur</option>
                         <option value="Bruno">Bruno</option>
                     </select>
                 </div>
-
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Tipo de Adicional *</label>
-                    <select id="contribType" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                        <option value="Peça / Hardware">Peça / Hardware (Processador, RAM, SSD, etc.)</option>
-                        <option value="Acessório / Brinde">Acessório / Brinde (Mouse, Teclado, Carregador, Monitor)</option>
-                        <option value="Serviço / Manutenção">Serviço / Manutenção (Limpeza, Pasta Térmica, Formatação)</option>
-                        <option value="Transporte / Frete">Transporte / Frete / Deslocamento</option>
-                    </select>
+                    <label class="block text-slate-300 mb-1">Descrição</label>
+                    <input type="text" id="contribDescription" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Descrição Detalhada *</label>
-                    <input type="text" id="contribDescription" required placeholder="Ex: Monitor antigo 19, Mouse RGB, Limpeza completa com troca de pasta" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                    <label class="block text-slate-300 mb-1">Custo (R$)</label>
+                    <input type="number" step="0.01" id="contribCost" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none">
                 </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Custo Adicionado (R$) *</label>
-                    <input type="number" step="0.01" id="contribCost" required placeholder="0.00 se já possuía, ou valor do custo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                </div>
-
-                <!-- Contribution Photo -->
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                    <label class="block text-xs font-semibold text-slate-300">Foto da Peça / Acessório (Opcional)</label>
-                    <div class="flex items-center gap-2">
-                        <label class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg flex items-center gap-1 transition">
-                            <i class="fa-solid fa-upload"></i> Upload Foto
-                            <input type="file" accept="image/*" onchange="handleFileUpload(event, 'contribPhoto', 'previewContrib')" class="hidden">
-                        </label>
-                        <span class="text-[10px] text-slate-500">ou URL:</span>
-                    </div>
-                    <input type="url" id="contribPhoto" oninput="updatePreviewFromUrl('contribPhoto', 'previewContrib')" placeholder="https://..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white outline-none">
-                    <div class="h-24 w-full bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-800">
-                        <img id="previewContrib" src="" class="hidden w-full h-full object-cover">
-                        <span id="placeholderContrib" class="text-[10px] text-slate-600">Sem Foto</span>
-                    </div>
-                </div>
-
-                <div class="pt-3 border-t border-slate-800 flex justify-end gap-3">
-                    <button type="button" onclick="closeModal('contributionModal')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition hover:scale-105">
-                        Adicionar ao Projeto
-                    </button>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('contributionModal')" class="px-4 py-2 bg-slate-900 text-slate-300 rounded-xl">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-600 text-white font-bold rounded-xl">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: ITEM DETAILS REPORT & LOG TIMELINE -->
-    <div id="detailModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div class="glass-card rounded-2xl w-full max-w-4xl border border-slate-700 shadow-2xl my-8 overflow-hidden text-slate-200 animate-modalIn">
-            <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950">
-                <div>
-                    <h3 id="detailTitle" class="text-base font-bold text-white">Detalhes do Projeto</h3>
-                    <p id="detailSubtitle" class="text-xs text-purple-300"></p>
-                </div>
-                <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+    <!-- CENTRAL DE LOGS MODAL -->
+    <div id="logsModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-3xl border border-slate-700 p-6 space-y-4 animate-modalIn text-xs">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+                <h3 class="font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-purple-400"></i> Central Completa de Logs
+                </h3>
+                <button onclick="closeModal('logsModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
-            <div id="detailContent" class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
-                <!-- Dynamic injected details -->
+            <div id="centralLogsList" class="max-h-[60vh] overflow-y-auto space-y-2 pr-1">
+                <!-- Injected -->
             </div>
         </div>
     </div>
@@ -839,42 +756,35 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h3 class="text-sm font-black text-white uppercase tracking-wider">Confirmação de Segurança</h3>
-                <p class="text-xs text-slate-400">Digite a senha para apagar permanentemente todo o banco de dados do WAVEX Business.</p>
+                <p class="text-xs text-slate-400">Digite a senha para apagar todo o banco de dados.</p>
             </div>
 
             <form onsubmit="confirmClearAllData(event)" class="space-y-4">
-                <div>
-                    <input type="password" id="clearPasswordInput" required placeholder="Digite a senha..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-sm font-bold text-white focus:border-rose-500 outline-none">
-                </div>
+                <input type="password" id="clearPasswordInput" required placeholder="Digite a senha..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-sm font-bold text-white focus:border-rose-500 outline-none">
                 <div class="flex gap-2">
-                    <button type="button" onclick="closeModal('passwordModal')" class="w-1/2 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="w-1/2 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-rose-900/40">
-                        Apagar Banco
-                    </button>
+                    <button type="button" onclick="closeModal('passwordModal')" class="w-1/2 py-2 bg-slate-900 text-slate-300 rounded-xl text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold">Apagar Banco</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- LIGHTBOX ZOOM MODAL -->
-    <div id="lightboxModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer" onclick="closeModal('lightboxModal')">
-        <img id="lightboxImage" src="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl border border-purple-500/30 object-contain animate-modalIn">
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT APP LOGIC -->
     <script>
         const STORAGE_KEY = 'wavex_business_v5';
-        
-        // Active Operator State: "Arthur" or "Bruno"
         let activeOperator = localStorage.getItem('wavex_active_operator') || 'Arthur';
-        let operatorFilterMode = 'ALL'; // 'ALL' or 'MY'
-        let currentTab = 'estoque'; // 'estoque' or 'logs'
-
+        let operatorFilterMode = 'ALL';
+        
         let projects = [];
         let financeChart = null;
         let categoryChart = null;
+
+        // Multi-step Wizard State
+        let currentWizardStep = 1;
+        let wizardPhotos = [];
+
+        // Carousel State for Cards
+        let cardCarouselIndex = {};
 
         window.onload = function() {
             updateOperatorUI();
@@ -883,14 +793,13 @@
             initCharts();
         };
 
-        // OPERATOR SWITCHER WITH ANIMATED SLIDING PILL
+        // OPERATOR SWITCHER
         function setActiveOperator(name) {
             activeOperator = name;
             localStorage.setItem('wavex_active_operator', name);
             updateOperatorUI();
             renderProjects();
-            if (currentTab === 'logs') renderCentralLogs();
-            showToast(`Operador alterado para ${activeOperator}`, 'info');
+            showToast(`Operador ativador: ${activeOperator}`, 'info');
         }
 
         function updateOperatorUI() {
@@ -898,8 +807,10 @@
             const btnArthur = document.getElementById('optBtnArthur');
             const btnBruno = document.getElementById('optBtnBruno');
             const badge = document.getElementById('activeOperatorBadge');
+            const kpiLabel = document.getElementById('kpiOperatorInvestedLabel');
 
             if (badge) badge.innerText = activeOperator;
+            if (kpiLabel) kpiLabel.innerText = `Seu Investimento (${activeOperator})`;
 
             if (activeOperator === 'Arthur') {
                 pill.style.transform = 'translateX(0%)';
@@ -914,61 +825,24 @@
 
         function setOperatorFilter(mode) {
             operatorFilterMode = mode;
-            const btnAll = document.getElementById('filterOpALL');
-            const btnMy = document.getElementById('filterOpMY');
-
-            if (mode === 'ALL') {
-                btnAll.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition";
-                btnMy.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
-            } else {
-                btnMy.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition";
-                btnAll.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
-            }
+            document.getElementById('filterOpALL').className = mode === 'ALL' ? 
+                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition" :
+                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
+            document.getElementById('filterOpMY').className = mode === 'MY' ? 
+                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition" :
+                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
             renderProjects();
         }
 
-        // MAIN NAVIGATION TABS (ESTOQUE vs LOGS)
-        function switchMainTab(tab) {
-            currentTab = tab;
-            const btnEstoque = document.getElementById('navTabEstoque');
-            const btnLogs = document.getElementById('navTabLogs');
-            const viewEstoque = document.getElementById('tabEstoqueView');
-            const viewLogs = document.getElementById('tabLogsView');
-
-            if (tab === 'estoque') {
-                btnEstoque.className = "tab-btn active px-3.5 py-1.5 rounded-lg text-white bg-purple-600/90 shadow-md transition flex items-center gap-1.5 font-bold";
-                btnLogs.className = "tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5 font-medium";
-                viewEstoque.classList.remove('hidden');
-                viewLogs.classList.add('hidden');
-                renderProjects();
-            } else {
-                btnLogs.className = "tab-btn active px-3.5 py-1.5 rounded-lg text-white bg-purple-600/90 shadow-md transition flex items-center gap-1.5 font-bold";
-                btnEstoque.className = "tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5 font-medium";
-                viewLogs.classList.remove('hidden');
-                viewEstoque.classList.add('hidden');
-                renderCentralLogs();
-            }
-        }
-
-        // DATA STORAGE & LOG SYSTEM
+        // DATA PERSISTENCE
         function loadProjects() {
             const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
-                try {
-                    projects = JSON.parse(data);
-                } catch (e) {
-                    console.error("Erro ao carregar banco", e);
-                    projects = [];
-                }
-            } else {
-                projects = [];
-            }
+            projects = data ? JSON.parse(data) : [];
         }
 
         function saveProjects() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
             renderProjects();
-            if (currentTab === 'logs') renderCentralLogs();
         }
 
         function createLog(action, detail) {
@@ -976,8 +850,8 @@
                 id: 'log-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
                 date: new Date().toLocaleString('pt-BR'),
                 user: activeOperator,
-                action: action,
-                detail: detail
+                action,
+                detail
             };
         }
 
@@ -985,524 +859,398 @@
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
         }
 
-        function splitInitialPrice() {
-            const price = parseFloat(document.getElementById('initialPrice').value) || 0;
-            const half = (price / 2).toFixed(2);
-            document.getElementById('arthurShare').value = half;
-            document.getElementById('brunoShare').value = half;
+        // WIZARD MULTI-STEP MODAL LOGIC
+        function openWizardModal() {
+            document.getElementById('wizardForm').reset();
+            document.getElementById('wizardItemId').value = '';
+            document.getElementById('wPurchaseDate').value = new Date().toISOString().slice(0, 16);
+            wizardPhotos = [];
+            renderWizardPhotos();
+            currentWizardStep = 1;
+            updateWizardStepUI();
+            updateWizardSpecsFields();
+            openModal('wizardModal');
         }
 
-        function toggleDropdown() {
-            document.getElementById('settingsDropdown').classList.toggle('hidden');
-        }
-
-        function closeDropdown() {
-            document.getElementById('settingsDropdown').classList.add('hidden');
-        }
-
-        window.onclick = function(e) {
-            if (!e.target.closest('#settingsDropdown') && !e.target.closest('button[onclick="toggleDropdown()"]')) {
-                closeDropdown();
+        function navigateWizard(direction) {
+            const newStep = currentWizardStep + direction;
+            if (newStep >= 1 && newStep <= 4) {
+                currentWizardStep = newStep;
+                updateWizardStepUI();
             }
         }
 
-        // DYNAMIC FIELDS BY CATEGORY
-        function toggleCategoryFields() {
-            const cat = document.getElementById('projectCategory').value;
-            document.getElementById('categoryLabel').innerText = cat;
+        function updateWizardStepUI() {
+            [1, 2, 3, 4].forEach(step => {
+                const el = document.getElementById(`wizardStep${step}`);
+                const ind = document.getElementById(`stepIndicator${step}`);
+                if (step === currentWizardStep) {
+                    el.classList.remove('hidden');
+                    ind.className = "py-1.5 rounded-lg bg-purple-600 text-white font-bold transition";
+                } else {
+                    el.classList.add('hidden');
+                    ind.className = "py-1.5 rounded-lg bg-slate-900 text-slate-500 border border-slate-800 font-medium transition";
+                }
+            });
 
-            document.getElementById('fieldsPC').classList.add('hidden');
-            document.getElementById('fieldsPhone').classList.add('hidden');
-            document.getElementById('fieldsConsole').classList.add('hidden');
-            document.getElementById('fieldsBike').classList.add('hidden');
-            document.getElementById('fieldsOther').classList.add('hidden');
-
-            if (cat === 'PC / Informática') {
-                document.getElementById('fieldsPC').classList.remove('hidden');
-            } else if (cat === 'Smartphone / Celular') {
-                document.getElementById('fieldsPhone').classList.remove('hidden');
-            } else if (cat === 'Videogame / Console') {
-                document.getElementById('fieldsConsole').classList.remove('hidden');
-            } else if (cat === 'Bicicleta / Veículo') {
-                document.getElementById('fieldsBike').classList.remove('hidden');
+            document.getElementById('btnWizardPrev').style.visibility = currentWizardStep === 1 ? 'hidden' : 'visible';
+            if (currentWizardStep === 4) {
+                document.getElementById('btnWizardNext').classList.add('hidden');
+                document.getElementById('btnWizardSubmit').classList.remove('hidden');
             } else {
-                document.getElementById('fieldsOther').classList.remove('hidden');
+                document.getElementById('btnWizardNext').classList.remove('hidden');
+                document.getElementById('btnWizardSubmit').classList.add('hidden');
             }
         }
 
-        // BASE64 FILE UPLOAD
-        function handleFileUpload(event, inputId, previewId) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function updateWizardSpecsFields() {
+            const cat = document.getElementById('wCategory').value;
+            ['PC', 'Phone', 'Console', 'Bike', 'Other'].forEach(c => {
+                document.getElementById(`wSpecs${c}`).classList.add('hidden');
+            });
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                document.getElementById(inputId).value = base64;
-                updatePreviewFromUrl(inputId, previewId);
+            if (cat === 'PC') document.getElementById('wSpecsPC').classList.remove('hidden');
+            else if (cat === 'Smartphone') document.getElementById('wSpecsPhone').classList.remove('hidden');
+            else if (cat === 'Videogame') document.getElementById('wSpecsConsole').classList.remove('hidden');
+            else if (cat === 'Bicicleta') document.getElementById('wSpecsBike').classList.remove('hidden');
+            else document.getElementById('wSpecsOther').classList.remove('hidden');
+        }
+
+        function autoSplitAportes() {
+            const val = parseFloat(document.getElementById('wInitialPrice').value) || 0;
+            const half = (val / 2).toFixed(2);
+            document.getElementById('wArthurShare').value = half;
+            document.getElementById('wBrunoShare').value = half;
+        }
+
+        // WIZARD MULTI-PHOTO HANDLER
+        function handleMultipleFiles(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    wizardPhotos.push(e.target.result);
+                    renderWizardPhotos();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function addPhotoFromUrl() {
+            const input = document.getElementById('wPhotoUrlInput');
+            if (input.value) {
+                wizardPhotos.push(input.value);
+                input.value = '';
+                renderWizardPhotos();
+            }
+        }
+
+        function removeWizardPhoto(index) {
+            wizardPhotos.splice(index, 1);
+            renderWizardPhotos();
+        }
+
+        function renderWizardPhotos() {
+            const grid = document.getElementById('wPhotosGrid');
+            grid.innerHTML = '';
+            wizardPhotos.forEach((src, idx) => {
+                const div = document.createElement('div');
+                div.className = 'relative h-20 bg-slate-900 rounded-xl overflow-hidden border border-slate-800 group';
+                div.innerHTML = `
+                    <img src="${src}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removeWizardPhoto(${idx})" class="absolute top-1 right-1 bg-rose-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        // SAVE PRODUCT FROM WIZARD
+        function saveWizardProject(e) {
+            e.preventDefault();
+
+            const category = document.getElementById('wCategory').value;
+            let specs = {};
+            if (category === 'PC') {
+                specs = {
+                    cpu: document.getElementById('wCpu').value,
+                    mobo: document.getElementById('wMobo').value,
+                    gpu: document.getElementById('wGpu').value,
+                    ram: document.getElementById('wRam').value,
+                    psu: document.getElementById('wPsu').value,
+                    storage: document.getElementById('wStorage').value
+                };
+            } else if (category === 'Smartphone') {
+                specs = {
+                    phoneModel: document.getElementById('wPhoneModel').value,
+                    phoneStorage: document.getElementById('wPhoneStorage').value,
+                    phoneBattery: document.getElementById('wPhoneBattery').value
+                };
+            }
+
+            const itemData = {
+                id: document.getElementById('wizardItemId').value || 'item-' + Date.now(),
+                creator: activeOperator,
+                name: document.getElementById('wName').value,
+                category,
+                status: document.getElementById('wStatus').value,
+                peripherals: document.getElementById('wPeripherals').value,
+                notes: document.getElementById('wNotes').value,
+                purchaseDate: document.getElementById('wPurchaseDate').value,
+                platformBuy: document.getElementById('wPlatformBuy').value,
+                advertisedPrice: parseFloat(document.getElementById('wAdvertisedPrice').value) || 0,
+                initialPrice: parseFloat(document.getElementById('wInitialPrice').value) || 0,
+                targetSalePrice: parseFloat(document.getElementById('wTargetSalePrice').value) || 0,
+                arthurShare: parseFloat(document.getElementById('wArthurShare').value) || 0,
+                brunoShare: parseFloat(document.getElementById('wBrunoShare').value) || 0,
+                photos: wizardPhotos.length > 0 ? wizardPhotos : ['https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX+Business'],
+                contributions: [],
+                logs: [createLog("Criação de Produto", `Produto "${document.getElementById('wName').value}" cadastrado por ${activeOperator}`)]
             };
-            reader.readAsDataURL(file);
-        }
 
-        function updatePreviewFromUrl(inputId, previewId) {
-            const url = document.getElementById(inputId).value;
-            const img = document.getElementById(previewId);
-            
-            let placeholderId = 'placeholderBefore';
-            if (previewId === 'previewParts') placeholderId = 'placeholderParts';
-            if (previewId === 'previewAfter') placeholderId = 'placeholderAfter';
-            if (previewId === 'previewContrib') placeholderId = 'placeholderContrib';
-
-            const placeholder = document.getElementById(placeholderId);
-
-            if (url) {
-                img.src = url;
-                img.classList.remove('hidden');
-                if (placeholder) placeholder.classList.add('hidden');
-            } else {
-                img.classList.add('hidden');
-                if (placeholder) placeholder.classList.remove('hidden');
-            }
-        }
-
-        function zoomImage(src) {
-            if (!src) return;
-            document.getElementById('lightboxImage').src = src;
-            document.getElementById('lightboxModal').classList.remove('hidden');
+            projects.unshift(itemData);
+            saveProjects();
+            closeModal('wizardModal');
+            showToast("Produto salvo com sucesso!", "success");
         }
 
         // FINANCIAL CALCULATIONS PER PROJECT
         function calculateProjectTotals(p) {
             const initialCost = parseFloat(p.initialPrice) || 0;
-            
-            let arthurContribsCost = 0;
-            let brunoContribsCost = 0;
+            let arthurContribs = 0, brunoContribs = 0;
 
             (p.contributions || []).forEach(c => {
                 const val = parseFloat(c.cost) || 0;
-                if (c.operator === 'Arthur') arthurContribsCost += val;
-                else if (c.operator === 'Bruno') brunoContribsCost += val;
-                else {
-                    arthurContribsCost += val / 2;
-                    brunoContribsCost += val / 2;
-                }
+                if (c.operator === 'Arthur') arthurContribs += val;
+                else if (c.operator === 'Bruno') brunoContribs += val;
             });
 
-            const totalUpgradesCost = arthurContribsCost + brunoContribsCost;
+            const totalUpgradesCost = arthurContribs + brunoContribs;
             const totalCost = initialCost + totalUpgradesCost;
 
             const isSold = p.status === 'Vendido';
-            const revenue = isSold ? (parseFloat(p.soldPrice) || 0) : 0;
-            const targetRevenue = parseFloat(p.targetSalePrice) || 0;
-
+            const revenue = isSold ? (parseFloat(p.soldPrice) || parseFloat(p.targetSalePrice) || 0) : 0;
             const netProfit = isSold ? (revenue - totalCost) : 0;
-            const projectedProfit = targetRevenue - totalCost;
 
-            const arthurInitial = parseFloat(p.arthurShare) || (initialCost / 2);
-            const brunoInitial = parseFloat(p.brunoShare) || (initialCost / 2);
-
-            const arthurTotalInvested = arthurInitial + arthurContribsCost;
-            const brunoTotalInvested = brunoInitial + brunoContribsCost;
+            const arthurTotalInvested = (parseFloat(p.arthurShare) || (initialCost / 2)) + arthurContribs;
+            const brunoTotalInvested = (parseFloat(p.brunoShare) || (initialCost / 2)) + brunoContribs;
 
             const profitHalf = netProfit / 2;
-            const arthurTotalReturn = isSold ? (arthurTotalInvested + profitHalf) : arthurTotalInvested;
-            const brunoTotalReturn = isSold ? (brunoTotalInvested + profitHalf) : brunoTotalInvested;
-
-            let daysToSell = 0;
-            if (p.purchaseDate && p.saleDate && isSold) {
-                const diffTime = Math.abs(new Date(p.saleDate) - new Date(p.purchaseDate));
-                daysToSell = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            }
+            const arthurReturn = isSold ? (arthurTotalInvested + profitHalf) : arthurTotalInvested;
+            const brunoReturn = isSold ? (brunoTotalInvested + profitHalf) : brunoTotalInvested;
 
             return {
                 initialCost,
                 totalUpgradesCost,
-                arthurContribsCost,
-                brunoContribsCost,
                 totalCost,
                 revenue,
-                targetRevenue,
                 netProfit,
-                projectedProfit,
                 arthurTotalInvested,
                 brunoTotalInvested,
-                arthurTotalReturn,
-                brunoTotalReturn,
-                daysToSell
+                arthurReturn,
+                brunoReturn
             };
         }
 
-        // RENDER PRODUCTS GRID
+        // RENDER PRODUCTS GRID & CAROUSELS
         function renderProjects() {
             const grid = document.getElementById('projectsGrid');
             const emptyState = document.getElementById('emptyState');
-            
             const search = document.getElementById('searchInput').value.toLowerCase();
             const catFilter = document.getElementById('categoryFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
-            const sortOption = document.getElementById('sortOption').value;
 
-            let totalInvested = 0;
+            let totalInvestedDupla = 0;
             let totalRevenue = 0;
             let totalNetProfit = 0;
-            let arthurTotalPayout = 0;
-            let brunoTotalPayout = 0;
-
-            let prepCount = 0;
-            let anunciadoCount = 0;
-            let vendidoCount = 0;
-            let totalDaysSum = 0;
+            let operatorInvestedSum = 0;
 
             let filtered = projects.filter(p => {
-                const matchSearch = p.name.toLowerCase().includes(search) || 
-                                    (p.notes && p.notes.toLowerCase().includes(search));
-                
+                const matchSearch = p.name.toLowerCase().includes(search);
                 const matchCat = catFilter === 'ALL' || p.category === catFilter;
                 const matchStatus = statusFilter === 'ALL' || p.status === statusFilter;
-                
-                let matchOp = true;
-                if (operatorFilterMode === 'MY') {
-                    const createdByMe = p.creator === activeOperator;
-                    const hasMyContrib = (p.contributions || []).some(c => c.operator === activeOperator);
-                    matchOp = createdByMe || hasMyContrib;
-                }
-
-                return matchSearch && matchCat && matchStatus && matchOp;
+                return matchSearch && matchCat && matchStatus;
             });
 
             projects.forEach(p => {
                 const calc = calculateProjectTotals(p);
-                totalInvested += calc.totalCost;
-                
+                totalInvestedDupla += calc.totalCost;
+                if (activeOperator === 'Arthur') operatorInvestedSum += calc.arthurTotalInvested;
+                else operatorInvestedSum += calc.brunoTotalInvested;
+
                 if (p.status === 'Vendido') {
                     totalRevenue += calc.revenue;
                     totalNetProfit += calc.netProfit;
-                    arthurTotalPayout += calc.arthurTotalReturn;
-                    brunoTotalPayout += calc.brunoTotalReturn;
-                    vendidoCount++;
-                    totalDaysSum += calc.daysToSell;
-                } else if (p.status === 'Em Preparação') {
-                    prepCount++;
-                } else if (p.status === 'Anunciado') {
-                    anunciadoCount++;
                 }
             });
 
-            document.getElementById('kpiInvested').innerText = formatBRL(totalInvested);
+            document.getElementById('kpiOperatorInvested').innerText = formatBRL(operatorInvestedSum);
+            document.getElementById('kpiInvested').innerText = formatBRL(totalInvestedDupla);
             document.getElementById('kpiRevenue').innerText = formatBRL(totalRevenue);
             document.getElementById('kpiNetProfit').innerText = formatBRL(totalNetProfit);
-            
-            const totalRoi = totalInvested > 0 ? ((totalNetProfit / totalInvested) * 100).toFixed(1) : 0;
-            document.getElementById('kpiRoi').innerText = `ROI Geral: ${totalRoi}%`;
-
-            document.getElementById('kpiArthurShare').innerText = formatBRL(arthurTotalPayout);
-            document.getElementById('kpiBrunoShare').innerText = formatBRL(brunoTotalPayout);
-
-            document.getElementById('kpiPrepCount').innerText = prepCount;
-            document.getElementById('kpiAnunciadoCount').innerText = anunciadoCount;
-            document.getElementById('kpiVendidoCount').innerText = vendidoCount;
-
-            const avgDays = vendidoCount > 0 ? (totalDaysSum / vendidoCount).toFixed(1) : 0;
-            document.getElementById('kpiAvgDays').innerText = `${avgDays} dias`;
-
-            filtered.sort((a, b) => {
-                const calcA = calculateProjectTotals(a);
-                const calcB = calculateProjectTotals(b);
-                if (sortOption === 'date-desc') return new Date(b.purchaseDate || 0) - new Date(a.purchaseDate || 0);
-                if (sortOption === 'date-asc') return new Date(a.purchaseDate || 0) - new Date(b.purchaseDate || 0);
-                if (sortOption === 'profit-desc') return calcB.netProfit - calcA.netProfit;
-                if (sortOption === 'cost-desc') return calcB.totalCost - calcA.totalCost;
-                return 0;
-            });
 
             grid.innerHTML = '';
             if (filtered.length === 0) {
                 emptyState.classList.remove('hidden');
             } else {
                 emptyState.classList.add('hidden');
-                filtered.forEach(p => grid.appendChild(createProjectCard(p)));
+                filtered.forEach(p => grid.appendChild(createCardElement(p)));
             }
 
             updateCharts();
         }
 
-        // CREATE CARD COMPONENT
-        function createProjectCard(p) {
+        // CREATE CARD COMPONENT WITH CAROUSEL ARROWS ON HOVER
+        function createCardElement(p) {
             const calc = calculateProjectTotals(p);
             const card = document.createElement('div');
             card.className = 'glass-card rounded-2xl border border-slate-800 hover:border-purple-500/40 transition duration-300 flex flex-col justify-between overflow-hidden group hover-lift animate-modalIn';
 
+            if (!cardCarouselIndex[p.id]) cardCarouselIndex[p.id] = 0;
+            const photos = (p.photos && p.photos.length > 0) ? p.photos : ['https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX'];
+            const currentImg = photos[cardCarouselIndex[p.id]] || photos[0];
+
             let statusBadge = '';
-            if (p.status === 'Em Preparação') {
-                statusBadge = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-wrench mr-1"></i> Em Prep</span>`;
-            } else if (p.status === 'Anunciado') {
-                statusBadge = `<span class="bg-sky-500/10 text-sky-400 border border-sky-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-bullhorn mr-1"></i> Anunciado</span>`;
-            } else {
-                statusBadge = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-check-double mr-1"></i> Vendido</span>`;
-            }
-
-            const imageToShow = p.photoAfter || p.photoParts || p.photoBefore || 'https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX+Business';
-
-            let specSnippet = '';
-            if (p.category === 'PC / Informática') specSnippet = `${p.specs?.cpu || ''} • ${p.specs?.gpu || ''}`;
-            else if (p.category === 'Smartphone / Celular') specSnippet = `${p.specs?.phoneModel || ''} ${p.specs?.phoneStorage || ''}`;
-            else if (p.category === 'Videogame / Console') specSnippet = `${p.specs?.consoleModel || ''} ${p.specs?.consoleStorage || ''}`;
-            else specSnippet = p.category;
+            if (p.status === 'Em Preparação') statusBadge = `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-wrench mr-1"></i> Em Prep</span>`;
+            else if (p.status === 'Anunciado') statusBadge = `<span class="bg-sky-500/10 text-sky-400 border border-sky-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-bullhorn mr-1"></i> Anunciado</span>`;
+            else statusBadge = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-check-double mr-1"></i> Vendido</span>`;
 
             card.innerHTML = `
                 <div>
-                    <!-- Photo Header -->
-                    <div class="relative h-48 w-full bg-slate-950 overflow-hidden cursor-pointer" onclick="zoomImage('${imageToShow}')">
-                        <img src="${imageToShow}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX'">
+                    <!-- Photo Carousel Container -->
+                    <div class="relative h-48 w-full bg-slate-950 overflow-hidden cursor-pointer" onclick="openFullscreenDetails('${p.id}')">
+                        <img id="cardImg-${p.id}" src="${currentImg}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-                        
+
+                        <!-- Hover Controls (Setas Visíveis Apenas no Hover) -->
+                        ${photos.length > 1 ? `
+                            <button onclick="navigateCardCarousel(event, '${p.id}', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button onclick="navigateCardCarousel(event, '${p.id}', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                            <span class="absolute bottom-2 right-3 text-[10px] font-bold bg-black/60 text-white px-2 py-0.5 rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                ${cardCarouselIndex[p.id] + 1}/${photos.length}
+                            </span>
+                        ` : ''}
+
                         <div class="absolute top-3 left-3">
-                            <span class="text-[10px] bg-purple-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-md font-semibold">
-                                ${p.category || 'Geral'}
+                            <span class="text-[10px] bg-purple-950/80 backdrop-blur-md text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-md font-bold">
+                                ${p.category}
                             </span>
                         </div>
 
                         <div class="absolute top-3 right-3">
                             ${statusBadge}
                         </div>
-
-                        <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end text-[10px]">
-                            <span class="bg-slate-900/80 backdrop-blur-md border border-slate-800 px-2 py-0.5 rounded text-slate-300">
-                                <i class="fa-regular fa-calendar mr-1"></i> ${p.purchaseDate ? p.purchaseDate.replace('T', ' ') : 'N/A'}
-                            </span>
-                            ${p.status === 'Vendido' ? `<span class="bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-bolt mr-1"></i> ${calc.daysToSell} dias p/ vender</span>` : ''}
-                        </div>
                     </div>
 
-                    <!-- Title & Specs -->
-                    <div class="p-5 space-y-4">
-                        <div>
-                            <h3 class="font-bold text-white text-base leading-snug line-clamp-1">${p.name}</h3>
-                            <p class="text-xs text-purple-300/80 mt-0.5 line-clamp-1 font-medium">
-                                ${specSnippet}
-                            </p>
-                        </div>
-
-                        <!-- Financial Summary Box -->
-                        <div class="bg-slate-950 rounded-xl p-3 border border-slate-800 text-xs space-y-2">
+                    <!-- Content -->
+                    <div class="p-4 space-y-3 cursor-pointer" onclick="openFullscreenDetails('${p.id}')">
+                        <h3 class="font-bold text-white text-sm line-clamp-1">${p.name}</h3>
+                        
+                        <div class="bg-slate-950 rounded-xl p-3 border border-slate-800 text-xs space-y-1">
                             <div class="flex justify-between text-slate-400">
-                                <span>Custo Total do Item:</span>
-                                <strong class="text-slate-200">${formatBRL(calc.totalCost)}</strong>
+                                <span>Custo Total:</span>
+                                <strong class="text-white">${formatBRL(calc.totalCost)}</strong>
                             </div>
                             <div class="flex justify-between text-slate-400">
-                                <span>${p.status === 'Vendido' ? 'Preço Vendido:' : 'Preço Anunciado/Alvo:'}</span>
-                                <strong class="${p.status === 'Vendido' ? 'text-emerald-400 font-bold' : 'text-slate-200'}">
-                                    ${formatBRL(p.status === 'Vendido' ? calc.revenue : calc.targetRevenue)}
-                                </strong>
-                            </div>
-                            <hr class="border-slate-800">
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-slate-300">Lucro ${p.status === 'Vendido' ? 'Realizado' : 'Projetado'}:</span>
-                                <span class="font-black text-sm ${calc.netProfit >= 0 || calc.projectedProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
-                                    ${formatBRL(p.status === 'Vendido' ? calc.netProfit : calc.projectedProfit)}
-                                </span>
+                                <span>Alvo / Vendido:</span>
+                                <strong class="text-emerald-400">${formatBRL(p.targetSalePrice)}</strong>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer Card Actions -->
-                <div class="px-5 py-3 border-t border-slate-800/80 bg-slate-950/50 flex items-center justify-between text-xs">
-                    <button onclick="viewProjectDetails('${p.id}')" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1 transition">
-                        <i class="fa-solid fa-eye"></i> Detalhes & Logs
+                <!-- Footer Action Buttons -->
+                <div class="px-4 py-2.5 border-t border-slate-800 bg-slate-950/50 flex justify-between items-center text-xs">
+                    <button onclick="openFullscreenDetails('${p.id}')" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-expand"></i> Ver Anúncio
                     </button>
-                    
-                    <div class="flex items-center gap-2">
-                        <button onclick="openAddContributionModal('${p.id}')" class="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 transition" title="Adicionar Peça/Serviço">
-                            <i class="fa-solid fa-plus-circle"></i> Peça
-                        </button>
-                        <button onclick="editProject('${p.id}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 transition hover:text-white" title="Editar Item">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button onclick="deleteProject('${p.id}')" class="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition" title="Excluir">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
+                    <button onclick="deleteProject('${p.id}')" class="text-rose-400 hover:text-rose-300 p-1"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `;
             return card;
         }
 
-        // SAVE OR EDIT PRODUCT
-        function saveProject(e) {
-            e.preventDefault();
+        function navigateCardCarousel(event, id, dir) {
+            event.stopPropagation();
+            const p = projects.find(item => item.id === id);
+            if (!p || !p.photos) return;
 
-            const id = document.getElementById('itemId').value || 'item-' + Date.now();
-            const existingIndex = projects.findIndex(p => p.id === id);
-            const category = document.getElementById('projectCategory').value;
+            let idx = (cardCarouselIndex[id] || 0) + dir;
+            if (idx < 0) idx = p.photos.length - 1;
+            if (idx >= p.photos.length) idx = 0;
 
-            let specs = {};
-            if (category === 'PC / Informática') {
-                specs = {
-                    cpu: document.getElementById('pcCpu').value,
-                    mobo: document.getElementById('pcMobo').value,
-                    gpu: document.getElementById('pcGpu').value,
-                    ram: document.getElementById('pcRam').value,
-                    psu: document.getElementById('pcPsu').value,
-                    case: document.getElementById('pcCase').value
-                };
-            } else if (category === 'Smartphone / Celular') {
-                specs = {
-                    phoneModel: document.getElementById('phoneModel').value,
-                    phoneStorage: document.getElementById('phoneStorage').value,
-                    phoneBattery: document.getElementById('phoneBattery').value,
-                    phoneCondition: document.getElementById('phoneCondition').value
-                };
-            } else if (category === 'Videogame / Console') {
-                specs = {
-                    consoleModel: document.getElementById('consoleModel').value,
-                    consoleStorage: document.getElementById('consoleStorage').value,
-                    consoleControllers: document.getElementById('consoleControllers').value,
-                    consoleGames: document.getElementById('consoleGames').value
-                };
-            } else if (category === 'Bicicleta / Veículo') {
-                specs = {
-                    bikeModel: document.getElementById('bikeModel').value,
-                    bikeSize: document.getElementById('bikeSize').value,
-                    bikeGears: document.getElementById('bikeGears').value,
-                    bikeCondition: document.getElementById('bikeCondition').value
-                };
-            } else {
-                specs = {
-                    otherBrand: document.getElementById('otherBrand').value,
-                    otherVoltage: document.getElementById('otherVoltage').value,
-                    otherCondition: document.getElementById('otherCondition').value
-                };
-            }
-
-            const isNew = existingIndex === -1;
-            const previousProject = !isNew ? projects[existingIndex] : null;
-
-            const projectData = {
-                id,
-                creator: isNew ? activeOperator : (previousProject.creator || activeOperator),
-                name: document.getElementById('projectName').value,
-                category,
-                status: document.getElementById('projectStatus').value,
-                purchaseDate: document.getElementById('purchaseDate').value,
-                saleDate: document.getElementById('saleDate').value,
-                platformBuy: document.getElementById('platformBuy').value,
-                platformAd: document.getElementById('platformAd').value,
-                platformSell: document.getElementById('platformSell').value,
-                initialPrice: parseFloat(document.getElementById('initialPrice').value) || 0,
-                arthurShare: parseFloat(document.getElementById('arthurShare').value) || 0,
-                brunoShare: parseFloat(document.getElementById('brunoShare').value) || 0,
-                targetSalePrice: parseFloat(document.getElementById('targetSalePrice').value) || 0,
-                soldPrice: parseFloat(document.getElementById('soldPrice').value) || 0,
-                photoBefore: document.getElementById('photoBefore').value,
-                photoParts: document.getElementById('photoParts').value,
-                photoAfter: document.getElementById('photoAfter').value,
-                peripherals: document.getElementById('specPeripherals').value,
-                notes: document.getElementById('projectNotes').value,
-                specs,
-                contributions: !isNew ? (previousProject.contributions || []) : [],
-                logs: !isNew ? (previousProject.logs || []) : []
-            };
-
-            if (isNew) {
-                projectData.logs.push(createLog("Criação do Item", `Item "${projectData.name}" cadastrado com valor de ${formatBRL(projectData.initialPrice)}`));
-            } else {
-                if (previousProject.status !== projectData.status) {
-                    projectData.logs.push(createLog("Mudança de Status", `Status de "${projectData.name}" alterado para "${projectData.status}"`));
-                } else {
-                    projectData.logs.push(createLog("Edição do Item", `Informações de "${projectData.name}" foram atualizadas`));
-                }
-            }
-
-            if (isNew) {
-                projects.unshift(projectData);
-            } else {
-                projects[existingIndex] = projectData;
-            }
-
-            saveProjects();
-            closeModal('itemModal');
-            showToast('Produto salvo no WAVEX Business!', 'success');
+            cardCarouselIndex[id] = idx;
+            document.getElementById(`cardImg-${id}`).src = p.photos[idx];
         }
 
-        function editProject(id) {
+        // FULLSCREEN MARKETPLACE PRODUCT VIEW
+        function openFullscreenDetails(id) {
             const p = projects.find(item => item.id === id);
             if (!p) return;
 
-            document.getElementById('itemId').value = p.id;
-            document.getElementById('projectName').value = p.name;
-            document.getElementById('projectCategory').value = p.category || 'PC / Informática';
-            document.getElementById('projectStatus').value = p.status;
-            document.getElementById('purchaseDate').value = p.purchaseDate || '';
-            document.getElementById('saleDate').value = p.saleDate || '';
-            document.getElementById('platformBuy').value = p.platformBuy || 'Facebook Marketplace';
-            document.getElementById('platformAd').value = p.platformAd || 'Facebook Marketplace';
-            document.getElementById('platformSell').value = p.platformSell || 'Facebook Marketplace';
-            document.getElementById('initialPrice').value = p.initialPrice || '';
-            document.getElementById('arthurShare').value = p.arthurShare || '';
-            document.getElementById('brunoShare').value = p.brunoShare || '';
-            document.getElementById('targetSalePrice').value = p.targetSalePrice || '';
-            document.getElementById('soldPrice').value = p.soldPrice || '';
-            document.getElementById('photoBefore').value = p.photoBefore || '';
-            document.getElementById('photoParts').value = p.photoParts || '';
-            document.getElementById('photoAfter').value = p.photoAfter || '';
-            document.getElementById('specPeripherals').value = p.peripherals || '';
-            document.getElementById('projectNotes').value = p.notes || '';
+            const calc = calculateProjectTotals(p);
+            document.getElementById('fsTitle').innerText = p.name;
+            document.getElementById('fsCategoryBadge').innerText = p.category;
+            document.getElementById('fsInitialCost').innerText = formatBRL(calc.initialCost);
+            document.getElementById('fsUpgradesCost').innerText = formatBRL(calc.totalUpgradesCost);
+            document.getElementById('fsTotalCost').innerText = formatBRL(calc.totalCost);
 
-            toggleCategoryFields();
+            document.getElementById('fsArthurAporte').innerText = formatBRL(p.arthurShare);
+            document.getElementById('fsArthurReturn').innerText = formatBRL(calc.arthurReturn);
+            document.getElementById('fsBrunoAporte').innerText = formatBRL(p.brunoShare);
+            document.getElementById('fsBrunoReturn').innerText = formatBRL(calc.brunoReturn);
 
+            // Photos Gallery
+            const photos = (p.photos && p.photos.length > 0) ? p.photos : ['https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX'];
+            const mainImg = document.getElementById('fsMainPhoto');
+            mainImg.src = photos[0];
+
+            const thumbsContainer = document.getElementById('fsThumbnails');
+            thumbsContainer.innerHTML = '';
+            photos.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = "w-16 h-16 object-cover rounded-xl border border-slate-800 cursor-pointer hover:border-purple-500 transition";
+                img.onclick = () => mainImg.src = src;
+                thumbsContainer.appendChild(img);
+            });
+
+            // Specs Box
+            const specsBox = document.getElementById('fsSpecsContainer');
+            specsBox.innerHTML = '';
             if (p.specs) {
-                if (p.category === 'PC / Informática') {
-                    document.getElementById('pcCpu').value = p.specs.cpu || '';
-                    document.getElementById('pcMobo').value = p.specs.mobo || '';
-                    document.getElementById('pcGpu').value = p.specs.gpu || '';
-                    document.getElementById('pcRam').value = p.specs.ram || '';
-                    document.getElementById('pcPsu').value = p.specs.psu || '';
-                    document.getElementById('pcCase').value = p.specs.case || '';
-                } else if (p.category === 'Smartphone / Celular') {
-                    document.getElementById('phoneModel').value = p.specs.phoneModel || '';
-                    document.getElementById('phoneStorage').value = p.specs.phoneStorage || '';
-                    document.getElementById('phoneBattery').value = p.specs.phoneBattery || '';
-                    document.getElementById('phoneCondition').value = p.specs.phoneCondition || '';
-                } else if (p.category === 'Videogame / Console') {
-                    document.getElementById('consoleModel').value = p.specs.consoleModel || '';
-                    document.getElementById('consoleStorage').value = p.specs.consoleStorage || '';
-                    document.getElementById('consoleControllers').value = p.specs.consoleControllers || '';
-                    document.getElementById('consoleGames').value = p.specs.consoleGames || '';
-                } else if (p.category === 'Bicicleta / Veículo') {
-                    document.getElementById('bikeModel').value = p.specs.bikeModel || '';
-                    document.getElementById('bikeSize').value = p.specs.bikeSize || '';
-                    document.getElementById('bikeGears').value = p.specs.bikeGears || '';
-                    document.getElementById('bikeCondition').value = p.specs.bikeCondition || '';
-                } else {
-                    document.getElementById('otherBrand').value = p.specs.otherBrand || '';
-                    document.getElementById('otherVoltage').value = p.specs.otherVoltage || '';
-                    document.getElementById('otherCondition').value = p.specs.otherCondition || '';
-                }
+                Object.entries(p.specs).forEach(([k, v]) => {
+                    if (v) {
+                        const div = document.createElement('div');
+                        div.innerHTML = `<span class="text-slate-500 uppercase font-bold text-[10px] block">${k}</span><strong class="text-white">${v}</strong>`;
+                        specsBox.appendChild(div);
+                    }
+                });
             }
 
-            updatePreviewFromUrl('photoBefore', 'previewBefore');
-            updatePreviewFromUrl('photoParts', 'previewParts');
-            updatePreviewFromUrl('photoAfter', 'previewAfter');
+            // Contributions List
+            const contribList = document.getElementById('fsContributionsList');
+            contribList.innerHTML = '';
+            (p.contributions || []).forEach(c => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center bg-slate-900 p-2.5 rounded-xl border border-slate-800";
+                div.innerHTML = `<div><strong class="text-white">${c.description}</strong><span class="text-[10px] text-slate-500 block">Por ${c.operator}</span></div><strong class="text-amber-400">${formatBRL(c.cost)}</strong>`;
+                contribList.appendChild(div);
+            });
 
-            document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen text-purple-400"></i> Editar Produto WAVEX';
-            openModal('itemModal');
+            document.getElementById('fsBtnAddPart').onclick = () => openAddContributionModal(p.id);
+
+            openModal('fullscreenDetailModal');
         }
 
-        function deleteProject(id) {
-            if (confirm('Tem certeza que deseja excluir este item?')) {
-                projects = projects.filter(p => p.id !== id);
-                saveProjects();
-                showToast('Item removido com sucesso.', 'warning');
-            }
-        }
-
-        // ADD CONTRIBUTION (PEÇA / SERVIÇO)
         function openAddContributionModal(itemId) {
-            document.getElementById('contributionForm').reset();
             document.getElementById('contribItemId').value = itemId;
             document.getElementById('contribOperator').value = activeOperator;
-            updatePreviewFromUrl('contribPhoto', 'previewContrib');
             openModal('contributionModal');
         }
 
@@ -1515,252 +1263,43 @@
             const contrib = {
                 id: 'contrib-' + Date.now(),
                 operator: document.getElementById('contribOperator').value,
-                type: document.getElementById('contribType').value,
                 description: document.getElementById('contribDescription').value,
-                cost: parseFloat(document.getElementById('contribCost').value) || 0,
-                photo: document.getElementById('contribPhoto').value,
-                date: new Date().toLocaleString('pt-BR')
+                cost: parseFloat(document.getElementById('contribCost').value) || 0
             };
 
             if (!p.contributions) p.contributions = [];
             p.contributions.push(contrib);
 
-            if (!p.logs) p.logs = [];
-            p.logs.push(createLog("Adicional de Peça/Serviço", `${contrib.operator} adicionou "${contrib.description}" (${formatBRL(contrib.cost)}) em "${p.name}"`));
-
             saveProjects();
             closeModal('contributionModal');
-            showToast('Peça/Serviço vinculado com sucesso!', 'success');
+            openFullscreenDetails(itemId);
+            showToast("Peça adicionada!", "success");
         }
 
-        function deleteContribution(itemId, contribId) {
-            const p = projects.find(item => item.id === itemId);
-            if (!p) return;
-
-            p.contributions = p.contributions.filter(c => c.id !== contribId);
-            p.logs.push(createLog("Remoção de Adicional", `Adicional removido do produto "${p.name}"`));
+        function deleteProject(id) {
+            projects = projects.filter(p => p.id !== id);
             saveProjects();
-            viewProjectDetails(itemId);
+            showToast("Item removido.", "warning");
         }
 
-        // DETAILS MODAL
-        function viewProjectDetails(id) {
-            const p = projects.find(item => item.id === id);
-            if (!p) return;
+        // LOGS MODAL
+        function openLogsModal() {
+            const list = document.getElementById('centralLogsList');
+            list.innerHTML = '';
+            let logs = [];
+            projects.forEach(p => (p.logs || []).forEach(l => logs.push({ ...l, pName: p.name })));
 
-            const calc = calculateProjectTotals(p);
-            const content = document.getElementById('detailContent');
-
-            let specHtml = '';
-            if (p.category === 'PC / Informática') {
-                specHtml = `
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                        <div><strong class="text-slate-400">Processador:</strong> <p class="text-white font-medium">${p.specs?.cpu || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Placa-Mãe:</strong> <p class="text-white font-medium">${p.specs?.mobo || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Placa de Vídeo:</strong> <p class="text-white font-medium">${p.specs?.gpu || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Memória RAM:</strong> <p class="text-white font-medium">${p.specs?.ram || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Fonte:</strong> <p class="text-white font-medium">${p.specs?.psu || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Gabinete / SSD:</strong> <p class="text-white font-medium">${p.specs?.case || 'N/A'}</p></div>
-                    </div>
-                `;
-            } else if (p.category === 'Smartphone / Celular') {
-                specHtml = `
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                        <div><strong class="text-slate-400">Modelo:</strong> <p class="text-white font-medium">${p.specs?.phoneModel || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Armazenamento:</strong> <p class="text-white font-medium">${p.specs?.phoneStorage || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Bateria:</strong> <p class="text-white font-medium">${p.specs?.phoneBattery || 'N/A'}</p></div>
-                        <div><strong class="text-slate-400">Condição:</strong> <p class="text-white font-medium">${p.specs?.phoneCondition || 'N/A'}</p></div>
-                    </div>
-                `;
+            if (logs.length === 0) {
+                list.innerHTML = `<p class="text-center text-slate-500 py-6">Nenhum log registrado.</p>`;
             } else {
-                specHtml = `<p class="text-xs text-slate-300">Especificações cadastradas para ${p.category}.</p>`;
-            }
-
-            content.innerHTML = `
-                <!-- Gallery Images -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">1. Foto Compra / Anúncio</span>
-                        <img src="${p.photoBefore || 'https://placehold.co/600x400/0f172a/94a3b8?text=Sem+Foto'}" onclick="zoomImage(this.src)" class="w-full h-36 object-cover rounded-xl border border-slate-800 cursor-pointer hover:opacity-90">
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block mb-1">2. Foto Peças / Upgrades</span>
-                        <img src="${p.photoParts || 'https://placehold.co/600x400/0f172a/94a3b8?text=Sem+Foto'}" onclick="zoomImage(this.src)" class="w-full h-36 object-cover rounded-xl border border-amber-500/30 cursor-pointer hover:opacity-90">
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-bold text-purple-300 uppercase tracking-wider block mb-1">3. Foto Produto Pronto</span>
-                        <img src="${p.photoAfter || 'https://placehold.co/600x400/0f172a/94a3b8?text=Sem+Foto'}" onclick="zoomImage(this.src)" class="w-full h-36 object-cover rounded-xl border border-purple-500/30 cursor-pointer hover:opacity-90">
-                    </div>
-                </div>
-
-                <!-- Technical Specs -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <h4 class="font-bold text-xs uppercase text-purple-400 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-info"></i> Ficha Técnica
-                    </h4>
-                    ${specHtml}
-                    ${p.peripherals ? `<div class="mt-3 pt-2 border-t border-slate-800 text-xs"><strong class="text-slate-400">Acessórios Inclusos:</strong> <p class="text-white font-medium">${p.peripherals}</p></div>` : ''}
-                </div>
-
-                ${p.notes ? `
-                    <div class="bg-amber-500/10 border border-amber-500/20 p-3.5 rounded-xl text-xs text-amber-200">
-                        <strong class="font-bold uppercase tracking-wider block mb-1 text-amber-400">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Defeitos / Pontos de Atenção
-                        </strong>
-                        <p class="leading-relaxed">${p.notes}</p>
-                    </div>
-                ` : ''}
-
-                <!-- Added Contributions List -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-xs uppercase text-amber-400 flex items-center gap-2">
-                            <i class="fa-solid fa-boxes-packing"></i> Peças, Serviços e Acessórios dos Sócios
-                        </h4>
-                        <button onclick="openAddContributionModal('${p.id}')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-[11px] font-bold transition">
-                            + Adicionar Peça/Serviço
-                        </button>
-                    </div>
-
-                    ${(p.contributions && p.contributions.length > 0) ? `
-                        <div class="space-y-2">
-                            ${p.contributions.map(c => `
-                                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                                    <div class="flex items-center gap-3">
-                                        ${c.photo ? `<img src="${c.photo}" onclick="zoomImage(this.src)" class="w-10 h-10 object-cover rounded-lg border border-slate-700 cursor-pointer">` : `<div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-500"><i class="fa-solid fa-wrench"></i></div>`}
-                                        <div>
-                                            <div class="flex items-center gap-2">
-                                                <strong class="text-white">${c.description}</strong>
-                                                <span class="text-[9px] px-2 py-0.5 rounded ${c.operator === 'Arthur' ? 'bg-purple-950 text-purple-300 border border-purple-500/30' : 'bg-indigo-950 text-indigo-300 border border-indigo-500/30'} font-bold">Colocado por: ${c.operator}</span>
-                                            </div>
-                                            <span class="text-[10px] text-slate-500">${c.type} • ${c.date}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <strong class="text-amber-400">${formatBRL(c.cost)}</strong>
-                                        <button onclick="deleteContribution('${p.id}', '${c.id}')" class="text-rose-400 hover:text-rose-300 p-1" title="Remover"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : `<p class="text-slate-500 text-[11px]">Nenhum adicional ou serviço registrado ainda.</p>`}
-                </div>
-
-                <!-- Financial Breakdown -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
-                    <h4 class="font-bold uppercase text-emerald-400 flex items-center gap-2">
-                        <i class="fa-solid fa-calculator"></i> Divisão Financeira dos Sócios
-                    </h4>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-slate-800 pb-3">
-                        <div>
-                            <span class="text-slate-400 block mb-1">Aporte Arthur:</span>
-                            <p class="text-white font-bold">${formatBRL(p.arthurShare)} (Compra) + ${formatBRL(calc.arthurContribsCost)} (Peças) = <strong>${formatBRL(calc.arthurTotalInvested)} Total</strong></p>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 block mb-1">Aporte Bruno:</span>
-                            <p class="text-purple-300 font-bold">${formatBRL(p.brunoShare)} (Compra) + ${formatBRL(calc.brunoContribsCost)} (Peças) = <strong>${formatBRL(calc.brunoTotalInvested)} Total</strong></p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1 text-slate-300">
-                        <div class="flex justify-between"><span>Valor Compra Inicial:</span> <span>${formatBRL(calc.initialCost)} (${p.platformBuy || 'Marketplace'})</span></div>
-                        <div class="flex justify-between"><span>Gastos Extras Peças/Serviços:</span> <span>${formatBRL(calc.totalUpgradesCost)}</span></div>
-                        <div class="flex justify-between font-extrabold text-white text-sm pt-1"><span>Custo Total do Item:</span> <span>${formatBRL(calc.totalCost)}</span></div>
-                    </div>
-
-                    <div class="bg-slate-900 p-3 rounded-xl border border-purple-500/30 flex justify-between items-center mt-3">
-                        <div>
-                            <span class="text-slate-400 text-[11px] block">Retorno Final ARTHUR:</span>
-                            <strong class="text-white text-base">${formatBRL(calc.arthurTotalReturn)}</strong>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-purple-300 text-[11px] block">Retorno Final BRUNO:</span>
-                            <strong class="text-purple-400 text-base">${formatBRL(calc.brunoTotalReturn)}</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Activity Logs -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
-                    <h4 class="font-bold uppercase text-purple-400 flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul"></i> Histórico de Atividades deste Item
-                    </h4>
-                    <div class="space-y-2 border-l-2 border-purple-500/40 pl-3">
-                        ${(p.logs || []).map(log => `
-                            <div class="text-[11px] space-y-0.5">
-                                <div class="flex items-center gap-2">
-                                    <strong class="text-white">${log.action}</strong>
-                                    <span class="text-[9px] text-purple-300 bg-purple-950 px-1.5 py-0.5 rounded border border-purple-500/20 font-bold">${log.user}</span>
-                                    <span class="text-slate-500 text-[10px] ml-auto">${log.date}</span>
-                                </div>
-                                <p class="text-slate-400">${log.detail}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('detailTitle').innerText = p.name;
-            document.getElementById('detailSubtitle').innerText = `${p.category} • Criado por ${p.creator || 'Arthur'}`;
-            openModal('detailModal');
-        }
-
-        // RENDER CENTRAL LOGS TAB
-        function renderCentralLogs() {
-            const container = document.getElementById('centralLogsList');
-            const search = (document.getElementById('logSearchInput').value || '').toLowerCase();
-            const opFilter = document.getElementById('logOperatorFilter').value;
-
-            let allLogs = [];
-            projects.forEach(p => {
-                (p.logs || []).forEach(log => {
-                    allLogs.push({
-                        ...log,
-                        projectName: p.name,
-                        projectId: p.id
-                    });
+                logs.forEach(l => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center";
+                    div.innerHTML = `<div><strong class="text-white">${l.action}</strong> <span class="text-purple-400">(${l.user})</span><p class="text-slate-400">${l.detail}</p></div><span class="text-slate-500 text-[10px]">${l.date}</span>`;
+                    list.appendChild(div);
                 });
-            });
-
-            // Sort logs chronologically descending
-            allLogs.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-            const filteredLogs = allLogs.filter(log => {
-                const matchOp = opFilter === 'ALL' || log.user === opFilter;
-                const matchSearch = log.action.toLowerCase().includes(search) || 
-                                    log.detail.toLowerCase().includes(search) || 
-                                    log.projectName.toLowerCase().includes(search);
-                return matchOp && matchSearch;
-            });
-
-            container.innerHTML = '';
-            if (filteredLogs.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 text-slate-500 text-xs">Nenhum log ou registro encontrado.</div>`;
-                return;
             }
-
-            filteredLogs.forEach(log => {
-                const item = document.createElement('div');
-                item.className = 'bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-purple-500/30 transition';
-                
-                item.innerHTML = `
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${log.user === 'Arthur' ? 'bg-purple-950 text-purple-300 border border-purple-500/30' : 'bg-indigo-950 text-indigo-300 border border-indigo-500/30'}">
-                                ${log.user}
-                            </span>
-                            <strong class="text-white text-xs">${log.action}</strong>
-                            <span class="text-slate-500 text-[10px]">• ${log.projectName}</span>
-                        </div>
-                        <p class="text-xs text-slate-400">${log.detail}</p>
-                    </div>
-                    <div class="text-right text-[11px] text-slate-500 whitespace-nowrap">
-                        <i class="fa-regular fa-clock mr-1"></i> ${log.date}
-                    </div>
-                `;
-                container.appendChild(item);
-            });
+            openModal('logsModal');
         }
 
         // BACKUP & SECURITY PASSWORD CLEAR
@@ -1769,31 +1308,23 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projects, null, 2));
             const anchor = document.createElement('a');
             anchor.setAttribute("href", dataStr);
-            anchor.setAttribute("download", `wavex_business_backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(anchor);
+            anchor.setAttribute("download", `wavex_business_backup.json`);
             anchor.click();
-            anchor.remove();
-            showToast('Backup WAVEX exportado!', 'success');
+            showToast("Backup exportado!", "success");
         }
 
         function importData(event) {
             closeDropdown();
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        projects = imported;
-                        saveProjects();
-                        showToast('Backup WAVEX importado!', 'success');
-                    } else {
-                        showToast('Formato JSON inválido.', 'error');
-                    }
+                    projects = JSON.parse(e.target.result);
+                    saveProjects();
+                    showToast("Backup importado!", "success");
                 } catch (err) {
-                    showToast('Erro ao ler arquivo JSON.', 'error');
+                    showToast("Erro ao importar JSON.", "error");
                 }
             };
             reader.readAsText(file);
@@ -1801,111 +1332,48 @@
 
         function promptClearAllData() {
             closeDropdown();
-            document.getElementById('clearPasswordInput').value = '';
             openModal('passwordModal');
         }
 
         function confirmClearAllData(e) {
             e.preventDefault();
-            const pwd = document.getElementById('clearPasswordInput').value;
-            if (pwd === '123') {
+            if (document.getElementById('clearPasswordInput').value === '123') {
                 projects = [];
                 saveProjects();
                 closeModal('passwordModal');
-                showToast('Banco de dados completamente zerado.', 'warning');
+                showToast("Banco zerado!", "warning");
             } else {
-                showToast('Senha incorreta! Ação negada.', 'error');
+                showToast("Senha incorreta!", "error");
             }
         }
 
-        // MODAL UTILS
-        function openModal(id) {
-            if (id === 'itemModal') {
-                document.getElementById('itemForm').reset();
-                document.getElementById('itemId').value = '';
-                document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Item no WAVEX Business';
-                const nowStr = new Date().toISOString().slice(0, 16);
-                document.getElementById('purchaseDate').value = nowStr;
-                toggleCategoryFields();
-                updatePreviewFromUrl('photoBefore', 'previewBefore');
-                updatePreviewFromUrl('photoParts', 'previewParts');
-                updatePreviewFromUrl('photoAfter', 'previewAfter');
-            }
-            document.getElementById(id).classList.remove('hidden');
-        }
+        // MODAL HELPERS
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function toggleDropdown() { document.getElementById('settingsDropdown').classList.toggle('hidden'); }
+        function closeDropdown() { document.getElementById('settingsDropdown').classList.add('hidden'); }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
-
-        // TOAST SYSTEM
         function showToast(msg, type = 'info') {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastMsg.innerText = msg;
-            if (type === 'success') {
-                toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>';
-            } else if (type === 'warning') {
-                toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-base"></i>';
-            } else if (type === 'error') {
-                toastIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>';
-            } else {
-                toastIcon.innerHTML = '<i class="fa-solid fa-circle-info text-purple-400 text-base"></i>';
-            }
-
+            document.getElementById('toastMessage').innerText = msg;
             toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3200);
+            setTimeout(() => toast.classList.add('hidden'), 3000);
         }
 
-        // CHARTS ANIMATION CONFIGURATION
+        // CHARTS SETUP
         function initCharts() {
             const ctx1 = document.getElementById('financeChart').getContext('2d');
             financeChart = new Chart(ctx1, {
                 type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [
-                        { label: 'Investimento (R$)', data: [], backgroundColor: 'rgba(147, 51, 234, 0.75)', borderRadius: 8 },
-                        { label: 'Lucro Líquido (R$)', data: [], backgroundColor: 'rgba(16, 185, 129, 0.85)', borderRadius: 8 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 1200,
-                        easing: 'easeOutQuart'
-                    },
-                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } } },
-                    scales: {
-                        x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
-                    }
-                }
+                data: { labels: [], datasets: [{ label: 'Investimento (R$)', data: [], backgroundColor: 'rgba(147, 51, 234, 0.8)', borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
             const ctx2 = document.getElementById('categoryChart').getContext('2d');
             categoryChart = new Chart(ctx2, {
                 type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: ['#a855f7', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 1200,
-                        easing: 'easeOutQuart'
-                    },
-                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } } }
-                }
+                data: { labels: [], datasets: [{ data: [], backgroundColor: ['#a855f7', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
             updateCharts();
@@ -1913,28 +1381,11 @@
 
         function updateCharts() {
             if (!financeChart || !categoryChart) return;
-
-            const monthlyData = {};
             const catCounts = {};
-
             projects.forEach(p => {
                 const cat = p.category || 'Outros';
                 catCounts[cat] = (catCounts[cat] || 0) + 1;
-
-                const month = p.purchaseDate ? p.purchaseDate.substring(0, 7) : 'Sem Data';
-                if (!monthlyData[month]) monthlyData[month] = { invested: 0, profit: 0 };
-
-                const calc = calculateProjectTotals(p);
-                monthlyData[month].invested += calc.totalCost;
-                if (p.status === 'Vendido') monthlyData[month].profit += calc.netProfit;
             });
-
-            const labels = Object.keys(monthlyData).sort();
-            financeChart.data.labels = labels;
-            financeChart.data.datasets[0].data = labels.map(l => monthlyData[l].invested);
-            financeChart.data.datasets[1].data = labels.map(l => monthlyData[l].profit);
-            financeChart.update();
-
             const catLabels = Object.keys(catCounts);
             categoryChart.data.labels = catLabels;
             categoryChart.data.datasets[0].data = catLabels.map(c => catCounts[c]);
