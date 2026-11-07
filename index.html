@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAVEX Negócios - Gestão de Revendas & Marketplace</title>
+    <title>WAVEX Business - Gestão de Revendas & Marketplace</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -27,17 +27,22 @@
                     },
                     keyframes: {
                         fadeIn: {
-                            '0%': { opacity: '0', transform: 'scale(0.96)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' }
+                            '0%': { opacity: '0', transform: 'translateY(8px) scale(0.98)' },
+                            '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
                         },
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(147, 51, 234, 0.4)' },
-                            '50%': { boxShadow: '0 0 30px rgba(168, 85, 247, 0.8)' }
+                        slideDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pulseSlow: {
+                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                            '50%': { opacity: '0.6', transform: 'scale(0.95)' }
                         }
                     },
                     animation: {
                         modalIn: 'fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        glow: 'pulseGlow 3s infinite'
+                        slideDown: 'slideDown 0.2s ease-out forwards',
+                        pulseSlow: 'pulseSlow 2.5s infinite ease-in-out'
                     }
                 }
             }
@@ -54,10 +59,11 @@
             font-family: 'Inter', sans-serif;
             background-color: #07090e;
             color: #f1f5f9;
+            overflow-x: hidden;
         }
         ::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: #07090e;
@@ -73,12 +79,25 @@
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
         }
-        .glow-purple {
-            box-shadow: 0 0 25px -5px rgba(147, 51, 234, 0.35);
+        .glass-card:hover {
+            border-color: rgba(147, 51, 234, 0.35);
+        }
+        .hover-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px -5px rgba(147, 51, 234, 0.2);
         }
         .glow-emerald {
-            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
+        }
+        .tab-btn {
+            position: relative;
+            transition: all 0.25s ease;
+        }
+        .tab-btn.active {
+            color: #ffffff;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -86,49 +105,61 @@
 
     <!-- TOP NAVIGATION HEADER -->
     <header class="border-b border-slate-800/80 bg-slate-950/90 sticky top-0 z-30 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <!-- Brand Logo & Tagline -->
-            <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+            <!-- Brand Logo & Business Tagline -->
+            <div class="flex items-center justify-between w-full md:w-auto">
                 <div class="flex items-center gap-3">
-                    <!-- Logo Element requested by user -->
-                    <img src="logo.png" id="wavex-logo" class="h-10 w-auto object-contain" alt="WAVEX" onerror="this.outerHTML='<div class=\'flex items-center gap-2 font-black text-2xl tracking-tighter\'><span class=\'text-purple-500\'>WAVE</span><span class=\'text-white bg-purple-600 px-2 py-0.5 rounded-lg shadow-lg shadow-purple-500/50\'>X</span></div>'">
-                    <div class="border-l border-slate-800 pl-3 hidden sm:block">
-                        <span class="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-500/30">NEGÓCIOS</span>
-                        <p class="text-[11px] text-slate-400 font-medium">Gestão de Flipping & Revendas</p>
+                    <img src="logo.png" id="wavex-logo" class="h-9 w-auto object-contain transition duration-300 hover:scale-105" alt="WAVEX" onerror="this.outerHTML='<div class=\'flex items-center gap-1.5 font-black text-2xl tracking-tighter cursor-pointer\'><span class=\'text-purple-500\'>WAVE</span><span class=\'text-white bg-purple-600 px-2 py-0.5 rounded-lg shadow-lg shadow-purple-500/50\'>X</span></div>'">
+                    <div class="border-l border-slate-800 pl-3">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/30">BUSINESS</span>
+                        <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Gestão de Revendas & Flip Hardware</p>
                     </div>
                 </div>
 
                 <!-- Mobile Action Button -->
-                <button onclick="openModal('itemModal')" class="md:hidden bg-purple-600 text-white p-2 rounded-xl text-xs font-bold">
+                <button onclick="openModal('itemModal')" class="md:hidden bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-2 rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40">
                     <i class="fa-solid fa-plus"></i> Novo
                 </button>
             </div>
 
-            <!-- Active Operator Switcher & Main Controls -->
-            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+            <!-- Main Nav Tabs & Controls -->
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
                 
-                <!-- Operator Active Switcher (Arthur / Bruno) -->
-                <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
-                    <span class="text-[11px] text-slate-400 font-semibold px-2.5 hidden sm:inline">Operando como:</span>
-                    <button id="btnOperatorArthur" onclick="setActiveOperator('Arthur')" class="px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 text-white bg-purple-600 shadow-lg shadow-purple-900/50">
+                <!-- Main Navigation Tabs (Estoque vs Central de Logs) -->
+                <nav class="flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl text-xs">
+                    <button id="navTabEstoque" onclick="switchMainTab('estoque')" class="tab-btn active px-3.5 py-1.5 rounded-lg text-white bg-purple-600/90 shadow-md transition flex items-center gap-1.5 font-bold">
+                        <i class="fa-solid fa-boxes-stacked"></i> Estoque
+                    </button>
+                    <button id="navTabLogs" onclick="switchMainTab('logs')" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5 font-medium">
+                        <i class="fa-solid fa-receipt"></i> Central de Logs
+                    </button>
+                </nav>
+
+                <!-- Animated Sliding Pill Operator Switcher (Arthur vs Bruno) -->
+                <div class="relative flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs select-none w-44 sm:w-48 h-9 shadow-inner">
+                    <!-- Sliding Background Pill -->
+                    <div id="operatorPill" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg shadow-md shadow-purple-900/50 transition-all duration-300 ease-out"></div>
+                    
+                    <button onclick="setActiveOperator('Arthur')" class="relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-white" id="optBtnArthur">
                         <i class="fa-solid fa-user-gear text-[10px]"></i> Arthur
                     </button>
-                    <button id="btnOperatorBruno" onclick="setActiveOperator('Bruno')" class="px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white">
+                    <button onclick="setActiveOperator('Bruno')" class="relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-slate-400" id="optBtnBruno">
                         <i class="fa-solid fa-user-gear text-[10px]"></i> Bruno
                     </button>
                 </div>
 
-                <button onclick="openModal('itemModal')" class="hidden md:flex bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-purple-900/40 transition items-center gap-2">
+                <!-- Add Product CTA -->
+                <button onclick="openModal('itemModal')" class="hidden md:flex bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-lg shadow-purple-900/40 transition duration-300 hover:scale-105 items-center gap-2">
                     <i class="fa-solid fa-plus"></i> Novo Item
                 </button>
 
-                <!-- Settings / Backup Dropdown -->
+                <!-- Settings / Options Menu -->
                 <div class="relative inline-block text-left">
-                    <button onclick="toggleDropdown()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 transition">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    <button onclick="toggleDropdown()" class="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 transition hover:text-white">
+                        <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
                     </button>
-                    <div id="settingsDropdown" class="hidden absolute right-0 mt-2 w-64 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl py-2 z-50 text-xs">
+                    <div id="settingsDropdown" class="hidden absolute right-0 mt-2 w-60 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl py-2 z-50 text-xs animate-slideDown">
                         <button onclick="exportData()" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-slate-300 flex items-center gap-2.5">
                             <i class="fa-solid fa-file-export text-purple-400"></i> Exportar Backup (JSON)
                         </button>
@@ -136,12 +167,12 @@
                             <i class="fa-solid fa-file-import text-cyan-400"></i> Importar Backup (JSON)
                             <input type="file" id="importInput" accept=".json" onchange="importData(event)" class="hidden">
                         </label>
-                        <hr class="border-slate-800 my-1">
-                        <button onclick="loadDemoData()" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-amber-400 flex items-center gap-2.5">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Carregar Dados de Teste
+                        <button onclick="switchMainTab('logs'); closeDropdown();" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-slate-300 flex items-center gap-2.5">
+                            <i class="fa-solid fa-list-check text-emerald-400"></i> Ver Central de Logs
                         </button>
-                        <button onclick="clearAllData()" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-rose-400 flex items-center gap-2.5">
-                            <i class="fa-solid fa-trash-can"></i> Limpar Todo o Banco
+                        <hr class="border-slate-800 my-1">
+                        <button onclick="promptClearAllData()" class="w-full text-left px-4 py-2.5 hover:bg-slate-800 text-rose-400 flex items-center gap-2.5 font-semibold">
+                            <i class="fa-solid fa-shield-halved"></i> Limpar Todo o Banco (Com Senha)
                         </button>
                     </div>
                 </div>
@@ -149,226 +180,261 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
+    <!-- MAIN APP VIEW CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow space-y-6">
 
         <!-- TOAST NOTIFICATION CONTAINER -->
-        <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 border border-purple-500/40 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition">
+        <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900/95 border border-purple-500/50 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-3 transition animate-modalIn">
             <span id="toastIcon"></span>
             <span id="toastMessage" class="font-medium"></span>
         </div>
 
-        <!-- OPERATOR WELCOME BANNER -->
-        <section class="glass-card rounded-2xl p-4 border border-purple-500/20 bg-gradient-to-r from-purple-950/40 via-slate-900/80 to-slate-950 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <!-- OPERATOR ACTIVE SESSION BANNER -->
+        <section class="glass-card rounded-2xl p-4 border border-purple-500/20 bg-gradient-to-r from-purple-950/30 via-slate-900/90 to-slate-950 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg">
-                    <i class="fa-solid fa-shield-halved"></i>
+                <div class="relative w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-base">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-950 animate-pulse"></span>
                 </div>
                 <div>
-                    <h2 class="text-sm font-extrabold text-white">Sessão Ativa: <span id="activeOperatorBadge" class="text-purple-400">Arthut</span></h2>
-                    <p class="text-xs text-slate-400">As novas ações, edições e adicionais de peças serão assinados por você.</p>
+                    <h2 class="text-xs font-extrabold text-white flex items-center gap-2">
+                        Sessão Ativa: <span id="activeOperatorBadge" class="text-purple-400 text-sm font-black">Arthur</span>
+                    </h2>
+                    <p class="text-[11px] text-slate-400">Novas adições, edições e apontamentos serão atribuídos a este operador.</p>
                 </div>
             </div>
 
-            <!-- Operator View Filter Buttons -->
+            <!-- Filter By Operator View -->
             <div class="flex items-center gap-2 w-full sm:w-auto">
                 <span class="text-xs text-slate-400 hidden lg:inline">Exibir:</span>
-                <button onclick="setOperatorFilter('ALL')" id="filterOpALL" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white">
-                    Todos os Itens
+                <button onclick="setOperatorFilter('ALL')" id="filterOpALL" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition">
+                    Todos os Produtos
                 </button>
-                <button onclick="setOperatorFilter('MY')" id="filterOpMY" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800">
+                <button onclick="setOperatorFilter('MY')" id="filterOpMY" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">
                     Minhas Operações
                 </button>
             </div>
         </section>
 
-        <!-- KPI METRICS OVERVIEW CARDS -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <!-- Total Invested -->
-            <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
-                <div class="flex justify-between items-start">
-                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Investimento Total</span>
-                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                        <i class="fa-solid fa-wallet"></i>
+        <!-- TAB 1: ESTOQUE E GESTÃO FINANCEIRA -->
+        <div id="tabEstoqueView" class="space-y-6">
+
+            <!-- KPI METRICS OVERVIEW CARDS -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Total Invested -->
+                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Investimento Total</span>
+                        <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div id="kpiInvested" class="text-2xl font-black text-white">R$ 0,00</div>
+                        <p class="text-[11px] text-slate-400 mt-1">Compras + Peças/Serviços</p>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <div id="kpiInvested" class="text-2xl font-black text-white">R$ 0,00</div>
-                    <p class="text-[11px] text-slate-400 mt-1">Compras + Peças/Serviços</p>
-                </div>
-            </div>
 
-            <!-- Total Revenue -->
-            <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
-                <div class="flex justify-between items-start">
-                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Faturamento (Bruto)</span>
-                    <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                        <i class="fa-solid fa-arrow-trend-up"></i>
+                <!-- Total Revenue -->
+                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Faturamento Bruto</span>
+                        <div class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div id="kpiRevenue" class="text-2xl font-black text-white">R$ 0,00</div>
+                        <p class="text-[11px] text-slate-400 mt-1">Vendas Concluídas</p>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <div id="kpiRevenue" class="text-2xl font-black text-white">R$ 0,00</div>
-                    <p class="text-[11px] text-slate-400 mt-1">Total de vendas efetuadas</p>
-                </div>
-            </div>
 
-            <!-- Net Profit -->
-            <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between glow-emerald">
-                <div class="flex justify-between items-start">
-                    <span class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Lucro Líquido Real</span>
-                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                        <i class="fa-solid fa-sack-dollar"></i>
+                <!-- Net Profit -->
+                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift glow-emerald">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Lucro Líquido Real</span>
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div id="kpiNetProfit" class="text-2xl font-black text-emerald-400">R$ 0,00</div>
+                        <p id="kpiRoi" class="text-[11px] text-emerald-300 font-medium mt-1">ROI Geral: 0%</p>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <div id="kpiNetProfit" class="text-2xl font-black text-emerald-400">R$ 0,00</div>
-                    <p id="kpiRoi" class="text-[11px] text-emerald-300 font-medium mt-1">ROI Geral: 0%</p>
-                </div>
-            </div>
 
-            <!-- Partner Division (Arthut & Bruno) -->
-            <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
-                <div class="flex justify-between items-start">
-                    <span class="text-[11px] font-extrabold text-purple-400 uppercase tracking-wider">Retorno Sócios</span>
-                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                        <i class="fa-solid fa-people-arrows"></i>
+                <!-- Partner Division (Arthur & Bruno) -->
+                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[11px] font-extrabold text-purple-400 uppercase tracking-wider">Retorno Sócios</span>
+                        <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-people-arrows"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2 space-y-1 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300 font-medium">Arthur:</span>
+                            <strong id="kpiArthurShare" class="text-white font-bold">R$ 0,00</strong>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300 font-medium">Bruno:</span>
+                            <strong id="kpiBrunoShare" class="text-purple-300 font-bold">R$ 0,00</strong>
+                        </div>
+                        <div class="text-[10px] text-slate-500 pt-1 border-t border-slate-800/80 text-right">Aportes + 50% Lucro</div>
                     </div>
                 </div>
-                <div class="mt-2 space-y-1 text-xs">
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-300">Arthut:</span>
-                        <strong id="kpiArthutShare" class="text-white">R$ 0,00</strong>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-300">Bruno:</span>
-                        <strong id="kpiBrunoShare" class="text-purple-300">R$ 0,00</strong>
-                    </div>
-                    <div class="text-[10px] text-slate-500 pt-1 border-t border-slate-800/80 text-right">Aportes + 50% Lucro Cada</div>
-                </div>
-            </div>
 
-            <!-- Inventory Status & Average Time -->
-            <div class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col justify-between">
-                <div class="flex justify-between items-start">
-                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Giro de Estoque</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
+                <!-- Stock Giro metrics -->
+                <div class="glass-card rounded-2xl p-4 border border-slate-800 hover-lift">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Giro de Estoque</span>
+                        <div class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-2 text-xs space-y-1">
-                    <div class="flex justify-between">
-                        <span class="text-amber-400">Prep: <strong id="kpiPrepCount">0</strong></span>
-                        <span class="text-sky-400">Anunciados: <strong id="kpiAnunciadoCount">0</strong></span>
-                    </div>
-                    <div class="flex justify-between text-emerald-400 font-bold">
-                        <span>Vendidos:</span>
-                        <span id="kpiVendidoCount">0</span>
-                    </div>
-                    <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800 text-right">
-                        Média Giro: <strong id="kpiAvgDays" class="text-white">0 dias</strong>
+                    <div class="mt-2 text-xs space-y-1">
+                        <div class="flex justify-between">
+                            <span class="text-amber-400">Prep: <strong id="kpiPrepCount">0</strong></span>
+                            <span class="text-sky-400">Anúncio: <strong id="kpiAnunciadoCount">0</strong></span>
+                        </div>
+                        <div class="flex justify-between text-emerald-400 font-bold">
+                            <span>Vendidos:</span>
+                            <span id="kpiVendidoCount">0</span>
+                        </div>
+                        <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-800 text-right">
+                            Média Giro: <strong id="kpiAvgDays" class="text-white">0 dias</strong>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- CHARTS SECTION -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Monthly Performance Chart -->
-            <div class="lg:col-span-2 glass-card rounded-2xl p-5 border border-slate-800">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-chart-column text-purple-400"></i> Evolução Mensal (Investimento vs Lucro)
-                    </h2>
-                </div>
-                <div class="h-56 relative w-full">
-                    <canvas id="financeChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Category Distribution Chart -->
-            <div class="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-cyan-400"></i> Mix de Categorias
-                    </h2>
-                </div>
-                <div class="h-52 relative w-full flex items-center justify-center">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <!-- FILTERS AND SORT BAR -->
-        <section class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                <!-- Search Input -->
-                <div class="relative w-full sm:w-64">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Buscar por modelo, peça, observação..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
+            <!-- CHARTS SECTION WITH FAN/OPENING ANIMATIONS -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Monthly Performance Chart -->
+                <div class="lg:col-span-2 glass-card rounded-2xl p-5 border border-slate-800">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-chart-column text-purple-400"></i> Evolução Mensal (Investimento vs Lucro)
+                        </h2>
+                    </div>
+                    <div class="h-60 relative w-full">
+                        <canvas id="financeChart"></canvas>
+                    </div>
                 </div>
 
-                <!-- Category Filter -->
-                <select id="categoryFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition">
-                    <option value="ALL">Todas Categorias</option>
-                    <option value="PC / Informática">PC / Informática</option>
-                    <option value="Smartphone / Celular">Smartphone / Celular</option>
-                    <option value="Videogame / Console">Videogame / Console</option>
-                    <option value="Bicicleta / Veículo">Bicicleta / Veículo</option>
-                    <option value="Eletrodoméstico / Outros">Eletrodoméstico / Outros</option>
-                </select>
+                <!-- Category Distribution Chart -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-cyan-400"></i> Mix de Categorias
+                        </h2>
+                    </div>
+                    <div class="h-56 relative w-full flex items-center justify-center">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </section>
 
-                <!-- Status Filter -->
-                <select id="statusFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition">
-                    <option value="ALL">Todos os Status</option>
-                    <option value="Em Preparação">Em Preparação</option>
-                    <option value="Anunciado">Anunciados</option>
-                    <option value="Vendido">Vendidos</option>
-                </select>
-            </div>
+            <!-- FILTERS AND SEARCH BAR -->
+            <section class="glass-card rounded-2xl p-4 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+                        <input type="text" id="searchInput" oninput="renderProjects()" placeholder="Buscar modelo, peça, defeito..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition duration-200">
+                    </div>
 
-            <!-- Sort By -->
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end text-xs text-slate-400">
-                <span>Ordenar por:</span>
-                <select id="sortOption" onchange="renderProjects()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition">
-                    <option value="date-desc">Mais Recentes</option>
-                    <option value="date-asc">Mais Antigos</option>
-                    <option value="profit-desc">Maior Lucro</option>
-                    <option value="cost-desc">Maior Investimento</option>
-                </select>
-            </div>
-        </section>
+                    <!-- Category Filter -->
+                    <select id="categoryFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
+                        <option value="ALL">Todas Categorias</option>
+                        <option value="PC / Informática">PC / Informática</option>
+                        <option value="Smartphone / Celular">Smartphone / Celular</option>
+                        <option value="Videogame / Console">Videogame / Console</option>
+                        <option value="Bicicleta / Veículo">Bicicleta / Veículo</option>
+                        <option value="Eletrodoméstico / Outros">Eletrodoméstico / Outros</option>
+                    </select>
 
-        <!-- PROJECTS GRID -->
-        <section id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Project Cards generated dynamically -->
-        </section>
+                    <!-- Status Filter -->
+                    <select id="statusFilter" onchange="renderProjects()" class="w-full sm:w-auto bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
+                        <option value="ALL">Todos os Status</option>
+                        <option value="Em Preparação">Em Preparação</option>
+                        <option value="Anunciado">Anunciados</option>
+                        <option value="Vendido">Vendidos</option>
+                    </select>
+                </div>
 
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="hidden text-center py-16 glass-card rounded-2xl border border-slate-800">
-            <div class="w-16 h-16 bg-slate-900 border border-purple-500/20 rounded-2xl flex items-center justify-center mx-auto text-purple-400 text-2xl mb-3 shadow-lg shadow-purple-900/20">
-                <i class="fa-solid fa-box-open"></i>
-            </div>
-            <h3 class="text-base font-bold text-white">Nenhum item encontrado</h3>
-            <p class="text-xs text-slate-400 max-w-md mx-auto mt-1 mb-4">O seu estoque está limpo. Cadastre um novo produto ou carregue dados de teste.</p>
-            <div class="flex justify-center gap-3">
-                <button onclick="openModal('itemModal')" class="px-5 py-2.5 bg-purple-700 hover:bg-purple-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/30 transition">
-                    Cadastrar Item
-                </button>
-                <button onclick="loadDemoData()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-xl text-xs font-bold transition">
-                    Carregar Exemplos
+                <!-- Sort By -->
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end text-xs text-slate-400">
+                    <span>Ordenar por:</span>
+                    <select id="sortOption" onchange="renderProjects()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500 transition duration-200">
+                        <option value="date-desc">Mais Recentes</option>
+                        <option value="date-asc">Mais Antigos</option>
+                        <option value="profit-desc">Maior Lucro</option>
+                        <option value="cost-desc">Maior Investimento</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- PRODUCTS GRID -->
+            <section id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically generated product cards -->
+            </section>
+
+            <!-- EMPTY ESTOQUE STATE -->
+            <div id="emptyState" class="hidden text-center py-16 glass-card rounded-2xl border border-slate-800 animate-modalIn">
+                <div class="w-16 h-16 bg-slate-900 border border-purple-500/20 rounded-2xl flex items-center justify-center mx-auto text-purple-400 text-2xl mb-3 shadow-lg shadow-purple-900/20">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <h3 class="text-base font-bold text-white">Nenhum produto cadastrado no estoque</h3>
+                <p class="text-xs text-slate-400 max-w-md mx-auto mt-1 mb-5">Seu banco de dados do WAVEX Business está zerado. Clique no botão abaixo para adicionar a primeira compra da dupla.</p>
+                <button onclick="openModal('itemModal')" class="px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40 transition duration-200 hover:scale-105">
+                    <i class="fa-solid fa-plus mr-1"></i> Cadastrar Primeiro Item
                 </button>
             </div>
         </div>
+
+        <!-- TAB 2: CENTRAL DEDICADA DE LOGS & AUDITORIA -->
+        <div id="tabLogsView" class="hidden space-y-6 animate-modalIn">
+            <section class="glass-card rounded-2xl p-6 border border-slate-800">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-base font-black text-white flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-purple-400"></i> Central Completa de Logs & Histórico de Operações
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Registro completo de todas as alterações, entradas, peças adicionadas e vendas realizadas por Arthur e Bruno.</p>
+                    </div>
+
+                    <!-- Log Filters -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="relative w-48">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                            <input type="text" id="logSearchInput" oninput="renderCentralLogs()" placeholder="Filtrar histórico..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white outline-none focus:border-purple-500">
+                        </div>
+                        <select id="logOperatorFilter" onchange="renderCentralLogs()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-300 outline-none focus:border-purple-500">
+                            <option value="ALL">Todos Operadores</option>
+                            <option value="Arthur">Somente Arthur</option>
+                            <option value="Bruno">Somente Bruno</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Logs List Container -->
+                <div id="centralLogsList" class="mt-6 space-y-3">
+                    <!-- Injected dynamically -->
+                </div>
+            </section>
+        </div>
+
     </main>
 
-    <!-- MODAL: ADD / EDIT ITEM -->
-    <div id="itemModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <!-- MODAL: ADD / EDIT PRODUCT ITEM -->
+    <div id="itemModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card rounded-2xl w-full max-w-3xl border border-slate-700 shadow-2xl my-8 overflow-hidden text-slate-200 animate-modalIn">
             
             <!-- Modal Header -->
             <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950">
                 <h3 id="modalTitle" class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Item no Estoque
+                    <i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Item no WAVEX Business
                 </h3>
                 <button onclick="closeModal('itemModal')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -379,7 +445,7 @@
             <form id="itemForm" onsubmit="saveProject(event)" class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
                 <input type="hidden" id="itemId">
 
-                <!-- Section 1: Informações Gerais & Categoria -->
+                <!-- Section 1: Categoria & Identificação -->
                 <div>
                     <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-list-check"></i> 1. Categoria & Identificação
@@ -527,16 +593,16 @@
                     <!-- Defect / Notes Box -->
                     <div class="mt-3">
                         <label class="block text-xs font-semibold text-amber-400 mb-1">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Defeitos / Pontos de Atenção / Detalhes do Negócio
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Defeitos / Observações / Detalhes do Negócio
                         </label>
                         <textarea id="projectNotes" rows="2" placeholder="Ex: Trincado leve na tampa traseira; precisa higienização; falta espelho da placa-mãe..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-amber-500"></textarea>
                     </div>
                 </div>
 
-                <!-- Section 3: Compra & Origem (Plataformas & Aportes) -->
+                <!-- Section 3: Compra & Origem (Aportes Arthur e Bruno) -->
                 <div class="pt-3 border-t border-slate-800">
                     <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-hand-holding-dollar"></i> 3. Compra Inicial & Divisão de Capital
+                        <i class="fa-solid fa-hand-holding-dollar"></i> 3. Compra Inicial & Aportes dos Sócios
                     </h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                         <div>
@@ -573,9 +639,9 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">
-                                <i class="fa-solid fa-user text-purple-400 mr-1"></i> Aporte de Capital: Arthut (R$)
+                                <i class="fa-solid fa-user text-purple-400 mr-1"></i> Aporte de Capital: Arthur (R$)
                             </label>
-                            <input type="number" step="0.01" id="arthutShare" placeholder="235.00" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            <input type="number" step="0.01" id="arthurShare" placeholder="235.00" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-purple-300 mb-1">
@@ -586,7 +652,7 @@
                     </div>
                 </div>
 
-                <!-- Section 4: Venda & Preços Alvo -->
+                <!-- Section 4: Venda & Fotos -->
                 <div class="pt-3 border-t border-slate-800">
                     <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-tag"></i> 4. Informações da Venda
@@ -616,12 +682,12 @@
                         </div>
                     </div>
 
-                    <!-- Images Section (Compra / Peças Adicionadas / Anúncio Pronto) -->
+                    <!-- Images Section -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
                         <!-- Foto Compra -->
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
                             <label class="block text-[11px] font-bold text-slate-400">1. Foto da Compra / Anúncio</label>
-                            <label class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg flex items-center justify-center gap-1">
+                            <label class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg flex items-center justify-center gap-1 transition">
                                 <i class="fa-solid fa-upload"></i> Selecionar Imagem
                                 <input type="file" accept="image/*" onchange="handleFileUpload(event, 'photoBefore', 'previewBefore')" class="hidden">
                             </label>
@@ -635,7 +701,7 @@
                         <!-- Foto Peças -->
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
                             <label class="block text-[11px] font-bold text-amber-400">2. Foto das Peças / Upgrades</label>
-                            <label class="cursor-pointer px-3 py-1.5 bg-amber-950/40 border border-amber-500/30 hover:bg-amber-900/40 text-xs text-amber-200 rounded-lg flex items-center justify-center gap-1">
+                            <label class="cursor-pointer px-3 py-1.5 bg-amber-950/40 border border-amber-500/30 hover:bg-amber-900/40 text-xs text-amber-200 rounded-lg flex items-center justify-center gap-1 transition">
                                 <i class="fa-solid fa-upload"></i> Selecionar Imagem
                                 <input type="file" accept="image/*" onchange="handleFileUpload(event, 'photoParts', 'previewParts')" class="hidden">
                             </label>
@@ -649,7 +715,7 @@
                         <!-- Foto Pronto -->
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
                             <label class="block text-[11px] font-bold text-purple-300">3. Foto do Produto Pronto</label>
-                            <label class="cursor-pointer px-3 py-1.5 bg-purple-950/40 border border-purple-500/30 hover:bg-purple-900/40 text-xs text-purple-200 rounded-lg flex items-center justify-center gap-1">
+                            <label class="cursor-pointer px-3 py-1.5 bg-purple-950/40 border border-purple-500/30 hover:bg-purple-900/40 text-xs text-purple-200 rounded-lg flex items-center justify-center gap-1 transition">
                                 <i class="fa-solid fa-upload"></i> Selecionar Imagem
                                 <input type="file" accept="image/*" onchange="handleFileUpload(event, 'photoAfter', 'previewAfter')" class="hidden">
                             </label>
@@ -667,7 +733,7 @@
                     <button type="button" onclick="closeModal('itemModal')" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition">
                         Cancelar
                     </button>
-                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40 transition">
+                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-purple-900/40 transition hover:scale-105">
                         Salvar Item no WAVEX
                     </button>
                 </div>
@@ -676,7 +742,7 @@
     </div>
 
     <!-- MODAL: ADD CONTRIBUTION / SERVICE / PART -->
-    <div id="contributionModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div id="contributionModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card rounded-2xl w-full max-w-lg border border-slate-700 shadow-2xl my-8 overflow-hidden text-slate-200 animate-modalIn">
             <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-950">
                 <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
@@ -693,7 +759,7 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Quem adicionou este item / serviço? *</label>
                     <select id="contribOperator" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
-                        <option value="Arthut">Arthut</option>
+                        <option value="Arthur">Arthur</option>
                         <option value="Bruno">Bruno</option>
                     </select>
                 </div>
@@ -722,7 +788,7 @@
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
                     <label class="block text-xs font-semibold text-slate-300">Foto da Peça / Acessório (Opcional)</label>
                     <div class="flex items-center gap-2">
-                        <label class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg flex items-center gap-1">
+                        <label class="cursor-pointer px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs text-white rounded-lg flex items-center gap-1 transition">
                             <i class="fa-solid fa-upload"></i> Upload Foto
                             <input type="file" accept="image/*" onchange="handleFileUpload(event, 'contribPhoto', 'previewContrib')" class="hidden">
                         </label>
@@ -739,7 +805,7 @@
                     <button type="button" onclick="closeModal('contributionModal')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs transition">
                         Cancelar
                     </button>
-                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition">
+                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition hover:scale-105">
                         Adicionar ao Projeto
                     </button>
                 </div>
@@ -765,18 +831,46 @@
         </div>
     </div>
 
+    <!-- SECURITY PASSWORD CONFIRMATION MODAL -->
+    <div id="passwordModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-sm border border-rose-500/40 p-6 space-y-4 animate-modalIn">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-sm font-black text-white uppercase tracking-wider">Confirmação de Segurança</h3>
+                <p class="text-xs text-slate-400">Digite a senha para apagar permanentemente todo o banco de dados do WAVEX Business.</p>
+            </div>
+
+            <form onsubmit="confirmClearAllData(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="clearPasswordInput" required placeholder="Digite a senha..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-sm font-bold text-white focus:border-rose-500 outline-none">
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeModal('passwordModal')" class="w-1/2 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl text-xs transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-1/2 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-rose-900/40">
+                        Apagar Banco
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- LIGHTBOX ZOOM MODAL -->
-    <div id="lightboxModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4" onclick="closeModal('lightboxModal')">
-        <img id="lightboxImage" src="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl border border-purple-500/30 object-contain">
+    <div id="lightboxModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer" onclick="closeModal('lightboxModal')">
+        <img id="lightboxImage" src="" class="max-w-full max-h-[90vh] rounded-2xl shadow-2xl border border-purple-500/30 object-contain animate-modalIn">
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const STORAGE_KEY = 'wavex_negocios_v4';
+        const STORAGE_KEY = 'wavex_business_v5';
         
-        // Active Operator State: "Arthut" (with TH) or "Bruno"
-        let activeOperator = localStorage.getItem('wavex_active_operator') || 'Arthut';
+        // Active Operator State: "Arthur" or "Bruno"
+        let activeOperator = localStorage.getItem('wavex_active_operator') || 'Arthur';
         let operatorFilterMode = 'ALL'; // 'ALL' or 'MY'
+        let currentTab = 'estoque'; // 'estoque' or 'logs'
 
         let projects = [];
         let financeChart = null;
@@ -789,28 +883,32 @@
             initCharts();
         };
 
-        // OPERATOR SWITCHER LOGIC
+        // OPERATOR SWITCHER WITH ANIMATED SLIDING PILL
         function setActiveOperator(name) {
             activeOperator = name;
             localStorage.setItem('wavex_active_operator', name);
             updateOperatorUI();
             renderProjects();
-            showToast(`Operando agora como ${activeOperator}`, 'info');
+            if (currentTab === 'logs') renderCentralLogs();
+            showToast(`Operador alterado para ${activeOperator}`, 'info');
         }
 
         function updateOperatorUI() {
-            const btnA = document.getElementById('btnOperatorArthut');
-            const btnB = document.getElementById('btnOperatorBruno');
+            const pill = document.getElementById('operatorPill');
+            const btnArthur = document.getElementById('optBtnArthur');
+            const btnBruno = document.getElementById('optBtnBruno');
             const badge = document.getElementById('activeOperatorBadge');
 
-            badge.innerText = activeOperator;
+            if (badge) badge.innerText = activeOperator;
 
-            if (activeOperator === 'Arthut') {
-                btnA.className = "px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 text-white bg-purple-600 shadow-lg shadow-purple-900/50";
-                btnB.className = "px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+            if (activeOperator === 'Arthur') {
+                pill.style.transform = 'translateX(0%)';
+                btnArthur.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-white";
+                btnBruno.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
             } else {
-                btnB.className = "px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 text-white bg-purple-600 shadow-lg shadow-purple-900/50";
-                btnA.className = "px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+                pill.style.transform = 'translateX(100%)';
+                btnBruno.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-white";
+                btnArthur.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
             }
         }
 
@@ -820,13 +918,36 @@
             const btnMy = document.getElementById('filterOpMY');
 
             if (mode === 'ALL') {
-                btnAll.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white";
-                btnMy.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800";
+                btnAll.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition";
+                btnMy.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
             } else {
-                btnMy.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white";
-                btnAll.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800";
+                btnMy.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition";
+                btnAll.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
             }
             renderProjects();
+        }
+
+        // MAIN NAVIGATION TABS (ESTOQUE vs LOGS)
+        function switchMainTab(tab) {
+            currentTab = tab;
+            const btnEstoque = document.getElementById('navTabEstoque');
+            const btnLogs = document.getElementById('navTabLogs');
+            const viewEstoque = document.getElementById('tabEstoqueView');
+            const viewLogs = document.getElementById('tabLogsView');
+
+            if (tab === 'estoque') {
+                btnEstoque.className = "tab-btn active px-3.5 py-1.5 rounded-lg text-white bg-purple-600/90 shadow-md transition flex items-center gap-1.5 font-bold";
+                btnLogs.className = "tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5 font-medium";
+                viewEstoque.classList.remove('hidden');
+                viewLogs.classList.add('hidden');
+                renderProjects();
+            } else {
+                btnLogs.className = "tab-btn active px-3.5 py-1.5 rounded-lg text-white bg-purple-600/90 shadow-md transition flex items-center gap-1.5 font-bold";
+                btnEstoque.className = "tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5 font-medium";
+                viewLogs.classList.remove('hidden');
+                viewEstoque.classList.add('hidden');
+                renderCentralLogs();
+            }
         }
 
         // DATA STORAGE & LOG SYSTEM
@@ -840,7 +961,6 @@
                     projects = [];
                 }
             } else {
-                // Starts completely clean as requested by user
                 projects = [];
             }
         }
@@ -848,12 +968,13 @@
         function saveProjects() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
             renderProjects();
+            if (currentTab === 'logs') renderCentralLogs();
         }
 
         function createLog(action, detail) {
-            const now = new Date();
             return {
-                date: now.toLocaleString('pt-BR'),
+                id: 'log-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+                date: new Date().toLocaleString('pt-BR'),
                 user: activeOperator,
                 action: action,
                 detail: detail
@@ -867,7 +988,7 @@
         function splitInitialPrice() {
             const price = parseFloat(document.getElementById('initialPrice').value) || 0;
             const half = (price / 2).toFixed(2);
-            document.getElementById('arthutShare').value = half;
+            document.getElementById('arthurShare').value = half;
             document.getElementById('brunoShare').value = half;
         }
 
@@ -875,12 +996,13 @@
             document.getElementById('settingsDropdown').classList.toggle('hidden');
         }
 
+        function closeDropdown() {
+            document.getElementById('settingsDropdown').classList.add('hidden');
+        }
+
         window.onclick = function(e) {
             if (!e.target.closest('#settingsDropdown') && !e.target.closest('button[onclick="toggleDropdown()"]')) {
-                const el = document.getElementById('settingsDropdown');
-                if (el && !el.classList.contains('hidden')) {
-                    el.classList.add('hidden');
-                }
+                closeDropdown();
             }
         }
 
@@ -908,7 +1030,7 @@
             }
         }
 
-        // BASE64 IMAGE FILE UPLOAD
+        // BASE64 FILE UPLOAD
         function handleFileUpload(event, inputId, previewId) {
             const file = event.target.files[0];
             if (!file) return;
@@ -953,20 +1075,20 @@
         function calculateProjectTotals(p) {
             const initialCost = parseFloat(p.initialPrice) || 0;
             
-            let arthutContribsCost = 0;
+            let arthurContribsCost = 0;
             let brunoContribsCost = 0;
 
             (p.contributions || []).forEach(c => {
                 const val = parseFloat(c.cost) || 0;
-                if (c.operator === 'Arthut') arthutContribsCost += val;
+                if (c.operator === 'Arthur') arthurContribsCost += val;
                 else if (c.operator === 'Bruno') brunoContribsCost += val;
                 else {
-                    arthutContribsCost += val / 2;
+                    arthurContribsCost += val / 2;
                     brunoContribsCost += val / 2;
                 }
             });
 
-            const totalUpgradesCost = arthutContribsCost + brunoContribsCost;
+            const totalUpgradesCost = arthurContribsCost + brunoContribsCost;
             const totalCost = initialCost + totalUpgradesCost;
 
             const isSold = p.status === 'Vendido';
@@ -976,17 +1098,16 @@
             const netProfit = isSold ? (revenue - totalCost) : 0;
             const projectedProfit = targetRevenue - totalCost;
 
-            const arthutInitial = parseFloat(p.arthutShare) || (initialCost / 2);
+            const arthurInitial = parseFloat(p.arthurShare) || (initialCost / 2);
             const brunoInitial = parseFloat(p.brunoShare) || (initialCost / 2);
 
-            const arthutTotalInvested = arthutInitial + arthutContribsCost;
+            const arthurTotalInvested = arthurInitial + arthurContribsCost;
             const brunoTotalInvested = brunoInitial + brunoContribsCost;
 
             const profitHalf = netProfit / 2;
-            const arthutTotalReturn = isSold ? (arthutTotalInvested + profitHalf) : arthutTotalInvested;
+            const arthurTotalReturn = isSold ? (arthurTotalInvested + profitHalf) : arthurTotalInvested;
             const brunoTotalReturn = isSold ? (brunoTotalInvested + profitHalf) : brunoTotalInvested;
 
-            // Days to sell calculation
             let daysToSell = 0;
             if (p.purchaseDate && p.saleDate && isSold) {
                 const diffTime = Math.abs(new Date(p.saleDate) - new Date(p.purchaseDate));
@@ -996,22 +1117,22 @@
             return {
                 initialCost,
                 totalUpgradesCost,
-                arthutContribsCost,
+                arthurContribsCost,
                 brunoContribsCost,
                 totalCost,
                 revenue,
                 targetRevenue,
                 netProfit,
                 projectedProfit,
-                arthutTotalInvested,
+                arthurTotalInvested,
                 brunoTotalInvested,
-                arthutTotalReturn,
+                arthurTotalReturn,
                 brunoTotalReturn,
                 daysToSell
             };
         }
 
-        // RENDER DASHBOARD & CARDS
+        // RENDER PRODUCTS GRID
         function renderProjects() {
             const grid = document.getElementById('projectsGrid');
             const emptyState = document.getElementById('emptyState');
@@ -1024,7 +1145,7 @@
             let totalInvested = 0;
             let totalRevenue = 0;
             let totalNetProfit = 0;
-            let arthutTotalPayout = 0;
+            let arthurTotalPayout = 0;
             let brunoTotalPayout = 0;
 
             let prepCount = 0;
@@ -1032,7 +1153,6 @@
             let vendidoCount = 0;
             let totalDaysSum = 0;
 
-            // Filter logic
             let filtered = projects.filter(p => {
                 const matchSearch = p.name.toLowerCase().includes(search) || 
                                     (p.notes && p.notes.toLowerCase().includes(search));
@@ -1042,7 +1162,6 @@
                 
                 let matchOp = true;
                 if (operatorFilterMode === 'MY') {
-                    // Item belongs to active operator if created by or contributed to by active operator
                     const createdByMe = p.creator === activeOperator;
                     const hasMyContrib = (p.contributions || []).some(c => c.operator === activeOperator);
                     matchOp = createdByMe || hasMyContrib;
@@ -1058,7 +1177,7 @@
                 if (p.status === 'Vendido') {
                     totalRevenue += calc.revenue;
                     totalNetProfit += calc.netProfit;
-                    arthutTotalPayout += calc.arthutTotalReturn;
+                    arthurTotalPayout += calc.arthurTotalReturn;
                     brunoTotalPayout += calc.brunoTotalReturn;
                     vendidoCount++;
                     totalDaysSum += calc.daysToSell;
@@ -1076,7 +1195,7 @@
             const totalRoi = totalInvested > 0 ? ((totalNetProfit / totalInvested) * 100).toFixed(1) : 0;
             document.getElementById('kpiRoi').innerText = `ROI Geral: ${totalRoi}%`;
 
-            document.getElementById('kpiArthutShare').innerText = formatBRL(arthutTotalPayout);
+            document.getElementById('kpiArthurShare').innerText = formatBRL(arthurTotalPayout);
             document.getElementById('kpiBrunoShare').innerText = formatBRL(brunoTotalPayout);
 
             document.getElementById('kpiPrepCount').innerText = prepCount;
@@ -1111,7 +1230,7 @@
         function createProjectCard(p) {
             const calc = calculateProjectTotals(p);
             const card = document.createElement('div');
-            card.className = 'glass-card rounded-2xl border border-slate-800 hover:border-purple-500/40 transition duration-300 flex flex-col justify-between overflow-hidden group';
+            card.className = 'glass-card rounded-2xl border border-slate-800 hover:border-purple-500/40 transition duration-300 flex flex-col justify-between overflow-hidden group hover-lift animate-modalIn';
 
             let statusBadge = '';
             if (p.status === 'Em Preparação') {
@@ -1122,7 +1241,7 @@
                 statusBadge = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-check-double mr-1"></i> Vendido</span>`;
             }
 
-            const imageToShow = p.photoAfter || p.photoParts || p.photoBefore || 'https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX+Sem+Imagem';
+            const imageToShow = p.photoAfter || p.photoParts || p.photoBefore || 'https://placehold.co/600x400/0f172a/94a3b8?text=WAVEX+Business';
 
             let specSnippet = '';
             if (p.category === 'PC / Informática') specSnippet = `${p.specs?.cpu || ''} • ${p.specs?.gpu || ''}`;
@@ -1189,17 +1308,15 @@
 
                 <!-- Footer Card Actions -->
                 <div class="px-5 py-3 border-t border-slate-800/80 bg-slate-950/50 flex items-center justify-between text-xs">
-                    <div class="flex items-center gap-2">
-                        <button onclick="viewProjectDetails('${p.id}')" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1">
-                            <i class="fa-solid fa-eye"></i> Detalhes & Logs
-                        </button>
-                    </div>
+                    <button onclick="viewProjectDetails('${p.id}')" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1 transition">
+                        <i class="fa-solid fa-eye"></i> Detalhes & Logs
+                    </button>
                     
                     <div class="flex items-center gap-2">
                         <button onclick="openAddContributionModal('${p.id}')" class="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 transition" title="Adicionar Peça/Serviço">
                             <i class="fa-solid fa-plus-circle"></i> Peça
                         </button>
-                        <button onclick="editProject('${p.id}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 transition" title="Editar Item">
+                        <button onclick="editProject('${p.id}')" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 transition hover:text-white" title="Editar Item">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <button onclick="deleteProject('${p.id}')" class="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition" title="Excluir">
@@ -1273,7 +1390,7 @@
                 platformAd: document.getElementById('platformAd').value,
                 platformSell: document.getElementById('platformSell').value,
                 initialPrice: parseFloat(document.getElementById('initialPrice').value) || 0,
-                arthutShare: parseFloat(document.getElementById('arthutShare').value) || 0,
+                arthurShare: parseFloat(document.getElementById('arthurShare').value) || 0,
                 brunoShare: parseFloat(document.getElementById('brunoShare').value) || 0,
                 targetSalePrice: parseFloat(document.getElementById('targetSalePrice').value) || 0,
                 soldPrice: parseFloat(document.getElementById('soldPrice').value) || 0,
@@ -1287,14 +1404,13 @@
                 logs: !isNew ? (previousProject.logs || []) : []
             };
 
-            // Generate Log Entry
             if (isNew) {
-                projectData.logs.push(createLog("Criação do Item", `Item cadastrado com compra inicial de ${formatBRL(projectData.initialPrice)}`));
+                projectData.logs.push(createLog("Criação do Item", `Item "${projectData.name}" cadastrado com valor de ${formatBRL(projectData.initialPrice)}`));
             } else {
                 if (previousProject.status !== projectData.status) {
-                    projectData.logs.push(createLog("Mudança de Status", `Status alterado de "${previousProject.status}" para "${projectData.status}"`));
+                    projectData.logs.push(createLog("Mudança de Status", `Status de "${projectData.name}" alterado para "${projectData.status}"`));
                 } else {
-                    projectData.logs.push(createLog("Edição do Item", "Informações e valores atualizados"));
+                    projectData.logs.push(createLog("Edição do Item", `Informações de "${projectData.name}" foram atualizadas`));
                 }
             }
 
@@ -1306,7 +1422,7 @@
 
             saveProjects();
             closeModal('itemModal');
-            showToast('Produto salvo no WAVEX!', 'success');
+            showToast('Produto salvo no WAVEX Business!', 'success');
         }
 
         function editProject(id) {
@@ -1323,7 +1439,7 @@
             document.getElementById('platformAd').value = p.platformAd || 'Facebook Marketplace';
             document.getElementById('platformSell').value = p.platformSell || 'Facebook Marketplace';
             document.getElementById('initialPrice').value = p.initialPrice || '';
-            document.getElementById('arthutShare').value = p.arthutShare || '';
+            document.getElementById('arthurShare').value = p.arthurShare || '';
             document.getElementById('brunoShare').value = p.brunoShare || '';
             document.getElementById('targetSalePrice').value = p.targetSalePrice || '';
             document.getElementById('soldPrice').value = p.soldPrice || '';
@@ -1377,11 +1493,11 @@
             if (confirm('Tem certeza que deseja excluir este item?')) {
                 projects = projects.filter(p => p.id !== id);
                 saveProjects();
-                showToast('Item removido.', 'warning');
+                showToast('Item removido com sucesso.', 'warning');
             }
         }
 
-        // ADD CONTRIBUTION (PEÇA / SERVIÇO / ACESSÓRIO)
+        // ADD CONTRIBUTION (PEÇA / SERVIÇO)
         function openAddContributionModal(itemId) {
             document.getElementById('contributionForm').reset();
             document.getElementById('contribItemId').value = itemId;
@@ -1410,11 +1526,11 @@
             p.contributions.push(contrib);
 
             if (!p.logs) p.logs = [];
-            p.logs.push(createLog("Adicional de Peça/Serviço", `${contrib.operator} adicionou "${contrib.description}" no valor de ${formatBRL(contrib.cost)}`));
+            p.logs.push(createLog("Adicional de Peça/Serviço", `${contrib.operator} adicionou "${contrib.description}" (${formatBRL(contrib.cost)}) em "${p.name}"`));
 
             saveProjects();
             closeModal('contributionModal');
-            showToast('Peça/Serviço adicionado com sucesso!', 'success');
+            showToast('Peça/Serviço vinculado com sucesso!', 'success');
         }
 
         function deleteContribution(itemId, contribId) {
@@ -1422,12 +1538,12 @@
             if (!p) return;
 
             p.contributions = p.contributions.filter(c => c.id !== contribId);
-            p.logs.push(createLog("Remoção de Adicional", "Item/Serviço removido"));
+            p.logs.push(createLog("Remoção de Adicional", `Adicional removido do produto "${p.name}"`));
             saveProjects();
             viewProjectDetails(itemId);
         }
 
-        // DETAILED REPORT & LOG TIMELINE MODAL
+        // DETAILS MODAL
         function viewProjectDetails(id) {
             const p = projects.find(item => item.id === id);
             if (!p) return;
@@ -1457,11 +1573,11 @@
                     </div>
                 `;
             } else {
-                specHtml = `<p class="text-xs text-slate-300">Especificações gerais cadastradas para ${p.category}.</p>`;
+                specHtml = `<p class="text-xs text-slate-300">Especificações cadastradas para ${p.category}.</p>`;
             }
 
             content.innerHTML = `
-                <!-- Photos Gallery (3 Columns) -->
+                <!-- Gallery Images -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">1. Foto Compra / Anúncio</span>
@@ -1477,13 +1593,13 @@
                     </div>
                 </div>
 
-                <!-- Specs & Peripherals -->
+                <!-- Technical Specs -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
                     <h4 class="font-bold text-xs uppercase text-purple-400 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-circle-info"></i> Ficha Técnica
                     </h4>
                     ${specHtml}
-                    ${p.peripherals ? `<div class="mt-3 pt-2 border-t border-slate-800 text-xs"><strong class="text-slate-400">Acessórios / Brindes Inicialmente Inclusos:</strong> <p class="text-white font-medium">${p.peripherals}</p></div>` : ''}
+                    ${p.peripherals ? `<div class="mt-3 pt-2 border-t border-slate-800 text-xs"><strong class="text-slate-400">Acessórios Inclusos:</strong> <p class="text-white font-medium">${p.peripherals}</p></div>` : ''}
                 </div>
 
                 ${p.notes ? `
@@ -1495,11 +1611,11 @@
                     </div>
                 ` : ''}
 
-                <!-- Dynamic Contributions List (Arthut vs Bruno) -->
+                <!-- Added Contributions List -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
                     <div class="flex justify-between items-center">
                         <h4 class="font-bold text-xs uppercase text-amber-400 flex items-center gap-2">
-                            <i class="fa-solid fa-boxes-packing"></i> Peças, Serviços e Adicionais dos Sócios
+                            <i class="fa-solid fa-boxes-packing"></i> Peças, Serviços e Acessórios dos Sócios
                         </h4>
                         <button onclick="openAddContributionModal('${p.id}')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-[11px] font-bold transition">
                             + Adicionar Peça/Serviço
@@ -1515,7 +1631,7 @@
                                         <div>
                                             <div class="flex items-center gap-2">
                                                 <strong class="text-white">${c.description}</strong>
-                                                <span class="text-[9px] px-2 py-0.5 rounded ${c.operator === 'Arthut' ? 'bg-purple-950 text-purple-300 border border-purple-500/30' : 'bg-indigo-950 text-indigo-300 border border-indigo-500/30'} font-bold">Colocado por: ${c.operator}</span>
+                                                <span class="text-[9px] px-2 py-0.5 rounded ${c.operator === 'Arthur' ? 'bg-purple-950 text-purple-300 border border-purple-500/30' : 'bg-indigo-950 text-indigo-300 border border-indigo-500/30'} font-bold">Colocado por: ${c.operator}</span>
                                             </div>
                                             <span class="text-[10px] text-slate-500">${c.type} • ${c.date}</span>
                                         </div>
@@ -1530,7 +1646,7 @@
                     ` : `<p class="text-slate-500 text-[11px]">Nenhum adicional ou serviço registrado ainda.</p>`}
                 </div>
 
-                <!-- Complete Financial Breakdown & Payout -->
+                <!-- Financial Breakdown -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
                     <h4 class="font-bold uppercase text-emerald-400 flex items-center gap-2">
                         <i class="fa-solid fa-calculator"></i> Divisão Financeira dos Sócios
@@ -1538,8 +1654,8 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-slate-800 pb-3">
                         <div>
-                            <span class="text-slate-400 block mb-1">Aporte Arthut:</span>
-                            <p class="text-white font-bold">${formatBRL(p.arthutShare)} (Compra) + ${formatBRL(calc.arthutContribsCost)} (Peças) = <strong>${formatBRL(calc.arthutTotalInvested)} Total</strong></p>
+                            <span class="text-slate-400 block mb-1">Aporte Arthur:</span>
+                            <p class="text-white font-bold">${formatBRL(p.arthurShare)} (Compra) + ${formatBRL(calc.arthurContribsCost)} (Peças) = <strong>${formatBRL(calc.arthurTotalInvested)} Total</strong></p>
                         </div>
                         <div>
                             <span class="text-slate-400 block mb-1">Aporte Bruno:</span>
@@ -1549,14 +1665,14 @@
 
                     <div class="space-y-1 text-slate-300">
                         <div class="flex justify-between"><span>Valor Compra Inicial:</span> <span>${formatBRL(calc.initialCost)} (${p.platformBuy || 'Marketplace'})</span></div>
-                        <div class="flex justify-between"><span>Gastos Extras em Peças/Serviços:</span> <span>${formatBRL(calc.totalUpgradesCost)}</span></div>
+                        <div class="flex justify-between"><span>Gastos Extras Peças/Serviços:</span> <span>${formatBRL(calc.totalUpgradesCost)}</span></div>
                         <div class="flex justify-between font-extrabold text-white text-sm pt-1"><span>Custo Total do Item:</span> <span>${formatBRL(calc.totalCost)}</span></div>
                     </div>
 
                     <div class="bg-slate-900 p-3 rounded-xl border border-purple-500/30 flex justify-between items-center mt-3">
                         <div>
-                            <span class="text-slate-400 text-[11px] block">Retorno Final ARTHUT:</span>
-                            <strong class="text-white text-base">${formatBRL(calc.arthutTotalReturn)}</strong>
+                            <span class="text-slate-400 text-[11px] block">Retorno Final ARTHUR:</span>
+                            <strong class="text-white text-base">${formatBRL(calc.arthurTotalReturn)}</strong>
                         </div>
                         <div class="text-right">
                             <span class="text-purple-300 text-[11px] block">Retorno Final BRUNO:</span>
@@ -1565,17 +1681,17 @@
                     </div>
                 </div>
 
-                <!-- Log History Timeline -->
+                <!-- Product Activity Logs -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
                     <h4 class="font-bold uppercase text-purple-400 flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul"></i> Histórico de Atividades & Logs
+                        <i class="fa-solid fa-list-ul"></i> Histórico de Atividades deste Item
                     </h4>
                     <div class="space-y-2 border-l-2 border-purple-500/40 pl-3">
                         ${(p.logs || []).map(log => `
                             <div class="text-[11px] space-y-0.5">
                                 <div class="flex items-center gap-2">
                                     <strong class="text-white">${log.action}</strong>
-                                    <span class="text-[9px] text-purple-300 bg-purple-950 px-1.5 py-0.5 rounded border border-purple-500/20">${log.user}</span>
+                                    <span class="text-[9px] text-purple-300 bg-purple-950 px-1.5 py-0.5 rounded border border-purple-500/20 font-bold">${log.user}</span>
                                     <span class="text-slate-500 text-[10px] ml-auto">${log.date}</span>
                                 </div>
                                 <p class="text-slate-400">${log.detail}</p>
@@ -1586,23 +1702,82 @@
             `;
 
             document.getElementById('detailTitle').innerText = p.name;
-            document.getElementById('detailSubtitle').innerText = `${p.category} • Criado por ${p.creator || 'Arthut'}`;
+            document.getElementById('detailSubtitle').innerText = `${p.category} • Criado por ${p.creator || 'Arthur'}`;
             openModal('detailModal');
         }
 
-        // BACKUP EXPORT / IMPORT JSON
+        // RENDER CENTRAL LOGS TAB
+        function renderCentralLogs() {
+            const container = document.getElementById('centralLogsList');
+            const search = (document.getElementById('logSearchInput').value || '').toLowerCase();
+            const opFilter = document.getElementById('logOperatorFilter').value;
+
+            let allLogs = [];
+            projects.forEach(p => {
+                (p.logs || []).forEach(log => {
+                    allLogs.push({
+                        ...log,
+                        projectName: p.name,
+                        projectId: p.id
+                    });
+                });
+            });
+
+            // Sort logs chronologically descending
+            allLogs.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+            const filteredLogs = allLogs.filter(log => {
+                const matchOp = opFilter === 'ALL' || log.user === opFilter;
+                const matchSearch = log.action.toLowerCase().includes(search) || 
+                                    log.detail.toLowerCase().includes(search) || 
+                                    log.projectName.toLowerCase().includes(search);
+                return matchOp && matchSearch;
+            });
+
+            container.innerHTML = '';
+            if (filteredLogs.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-slate-500 text-xs">Nenhum log ou registro encontrado.</div>`;
+                return;
+            }
+
+            filteredLogs.forEach(log => {
+                const item = document.createElement('div');
+                item.className = 'bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-purple-500/30 transition';
+                
+                item.innerHTML = `
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${log.user === 'Arthur' ? 'bg-purple-950 text-purple-300 border border-purple-500/30' : 'bg-indigo-950 text-indigo-300 border border-indigo-500/30'}">
+                                ${log.user}
+                            </span>
+                            <strong class="text-white text-xs">${log.action}</strong>
+                            <span class="text-slate-500 text-[10px]">• ${log.projectName}</span>
+                        </div>
+                        <p class="text-xs text-slate-400">${log.detail}</p>
+                    </div>
+                    <div class="text-right text-[11px] text-slate-500 whitespace-nowrap">
+                        <i class="fa-regular fa-clock mr-1"></i> ${log.date}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // BACKUP & SECURITY PASSWORD CLEAR
         function exportData() {
+            closeDropdown();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projects, null, 2));
             const anchor = document.createElement('a');
             anchor.setAttribute("href", dataStr);
-            anchor.setAttribute("download", `wavex_backup_${new Date().toISOString().split('T')[0]}.json`);
+            anchor.setAttribute("download", `wavex_business_backup_${new Date().toISOString().split('T')[0]}.json`);
             document.body.appendChild(anchor);
             anchor.click();
             anchor.remove();
-            showToast('Backup WAVEX gerado!', 'success');
+            showToast('Backup WAVEX exportado!', 'success');
         }
 
         function importData(event) {
+            closeDropdown();
             const file = event.target.files[0];
             if (!file) return;
 
@@ -1613,93 +1788,42 @@
                     if (Array.isArray(imported)) {
                         projects = imported;
                         saveProjects();
-                        showToast('Backup importado com sucesso!', 'success');
+                        showToast('Backup WAVEX importado!', 'success');
                     } else {
                         showToast('Formato JSON inválido.', 'error');
                     }
                 } catch (err) {
-                    showToast('Erro ao ler JSON.', 'error');
+                    showToast('Erro ao ler arquivo JSON.', 'error');
                 }
             };
             reader.readAsText(file);
         }
 
-        function clearAllData() {
-            if (confirm('Atenção: Isso apagar todos os itens cadastrados. Deseja continuar?')) {
+        function promptClearAllData() {
+            closeDropdown();
+            document.getElementById('clearPasswordInput').value = '';
+            openModal('passwordModal');
+        }
+
+        function confirmClearAllData(e) {
+            e.preventDefault();
+            const pwd = document.getElementById('clearPasswordInput').value;
+            if (pwd === '123') {
                 projects = [];
                 saveProjects();
-                showToast('Banco de dados zerado.', 'warning');
+                closeModal('passwordModal');
+                showToast('Banco de dados completamente zerado.', 'warning');
+            } else {
+                showToast('Senha incorreta! Ação negada.', 'error');
             }
         }
 
-        // DEMO DATA PRELOAD (Option for testing)
-        function loadDemoData() {
-            projects = [
-                {
-                    id: 'pc-wavex-demo-1',
-                    creator: 'Arthut',
-                    name: 'PC Gamer i3 / GTX 750 (Kit Completo + Teclado)',
-                    category: 'PC / Informática',
-                    status: 'Em Preparação',
-                    purchaseDate: '2026-11-01T14:30',
-                    saleDate: '',
-                    platformBuy: 'Facebook Marketplace',
-                    platformAd: 'Facebook Marketplace',
-                    platformSell: 'Facebook Marketplace',
-                    initialPrice: 470,
-                    arthutShare: 235,
-                    brunoShare: 235,
-                    targetSalePrice: 1000,
-                    soldPrice: 0,
-                    photoBefore: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80',
-                    photoParts: 'https://images.unsplash.com/photo-1591799264318-7e6e84575970?auto=format&fit=crop&w=600&q=80',
-                    photoAfter: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=600&q=80',
-                    peripherals: 'Teclado Gamer (Brinde negociado pelo Arthut), Mouse RGB',
-                    notes: 'Comprado no Marketplace por R$ 470 (Arthut R$235 / Bruno R$235).',
-                    specs: {
-                        cpu: 'Intel i3 2ª Gen (Socket LGA 1155)',
-                        mobo: 'H61 LGA 1155',
-                        gpu: 'NVIDIA GTX 750 2GB',
-                        ram: '8GB DDR3',
-                        psu: 'Fonte 500W Real',
-                        case: 'Gabinete RGB com Fans'
-                    },
-                    contributions: [
-                        {
-                            id: 'c1',
-                            operator: 'Arthut',
-                            type: 'Acessório / Brindes',
-                            description: 'Monitor 19 polegadas antigo meu',
-                            cost: 0,
-                            date: '01/11/2026 15:00'
-                        },
-                        {
-                            id: 'c2',
-                            operator: 'Bruno',
-                            type: 'Acessório / Brindes',
-                            description: 'Mouse Gamer RGB',
-                            cost: 25,
-                            date: '02/11/2026 10:00'
-                        }
-                    ],
-                    logs: [
-                        { date: '01/11/2026 14:30', user: 'Arthut', action: 'Criação do Item', detail: 'Comprado PC LGA 1155 por R$ 470 com teclado brinde' },
-                        { date: '01/11/2026 15:00', user: 'Arthut', action: 'Adicional de Peça/Serviço', detail: 'Adicionou Monitor 19' },
-                        { date: '02/11/2026 10:00', user: 'Bruno', action: 'Adicional de Peça/Serviço', detail: 'Bruno comprou Mouse RGB por R$ 25' }
-                    ]
-                }
-            ];
-
-            saveProjects();
-            showToast('Dados de teste carregados com sucesso!', 'info');
-        }
-
-        // MODAL OPEN / CLOSE UTILS
+        // MODAL UTILS
         function openModal(id) {
             if (id === 'itemModal') {
                 document.getElementById('itemForm').reset();
                 document.getElementById('itemId').value = '';
-                document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Item no Estoque';
+                document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-box-archive text-purple-400"></i> Cadastrar Item no WAVEX Business';
                 const nowStr = new Date().toISOString().slice(0, 16);
                 document.getElementById('purchaseDate').value = nowStr;
                 toggleCategoryFields();
@@ -1725,15 +1849,17 @@
                 toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>';
             } else if (type === 'warning') {
                 toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-base"></i>';
+            } else if (type === 'error') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>';
             } else {
                 toastIcon.innerHTML = '<i class="fa-solid fa-circle-info text-purple-400 text-base"></i>';
             }
 
             toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
+            setTimeout(() => toast.classList.add('hidden'), 3200);
         }
 
-        // CHARTS LOGIC
+        // CHARTS ANIMATION CONFIGURATION
         function initCharts() {
             const ctx1 = document.getElementById('financeChart').getContext('2d');
             financeChart = new Chart(ctx1, {
@@ -1741,14 +1867,18 @@
                 data: {
                     labels: [],
                     datasets: [
-                        { label: 'Investimento (R$)', data: [], backgroundColor: 'rgba(147, 51, 234, 0.7)', borderRadius: 6 },
-                        { label: 'Lucro Líquido (R$)', data: [], backgroundColor: 'rgba(16, 185, 129, 0.8)', borderRadius: 6 }
+                        { label: 'Investimento (R$)', data: [], backgroundColor: 'rgba(147, 51, 234, 0.75)', borderRadius: 8 },
+                        { label: 'Lucro Líquido (R$)', data: [], backgroundColor: 'rgba(16, 185, 129, 0.85)', borderRadius: 8 }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } } },
                     scales: {
                         x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
                         y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
@@ -1770,7 +1900,11 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } } }
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } } }
                 }
             });
 
