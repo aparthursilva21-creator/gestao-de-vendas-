@@ -102,6 +102,30 @@
 </head>
 <body class="min-h-screen flex flex-col pb-12 selection:bg-purple-600 selection:text-white">
 
+    <!-- DEVICE REGISTRATION MODAL -->
+    <div id="deviceRegistrationModal" class="hidden fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-sm border border-purple-500/50 p-8 space-y-6 text-center animate-modalIn shadow-2xl shadow-purple-900/50">
+            <div class="w-16 h-16 bg-purple-900/30 text-purple-400 border border-purple-500/40 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-black text-white uppercase tracking-wider mb-2">Registro de Dispositivo</h3>
+                <p class="text-xs text-slate-400">Para garantir a segurança das operações, identifique quem está utilizando este dispositivo.</p>
+            </div>
+            <div class="space-y-3 pt-2">
+                <button onclick="registerDevice('Arthur')" class="w-full py-3.5 bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-600 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-3">
+                    <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs">A</div>
+                    Sou o Arthur
+                </button>
+                <button onclick="registerDevice('Bruno')" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-3">
+                    <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">B</div>
+                    Sou o Bruno
+                </button>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-4"><i class="fa-solid fa-triangle-exclamation text-amber-500/70"></i> Atenção: Esta escolha é permanente neste navegador.</p>
+        </div>
+    </div>
+
     <!-- TOP NAVIGATION HEADER -->
     <header class="border-b border-slate-800/80 bg-slate-950/90 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
@@ -128,16 +152,10 @@
             <!-- Header Right Controls -->
             <div class="flex items-center gap-3">
                 
-                <!-- Animated Sliding Pill Operator Switcher (Arthur vs Bruno) -->
-                <div class="relative flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs select-none w-44 sm:w-48 h-9 shadow-inner">
-                    <div id="operatorPill" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg shadow-md shadow-purple-900/50 transition-all duration-300 ease-out"></div>
-                    
-                    <button onclick="setActiveOperator('Arthur')" class="relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-white" id="optBtnArthur">
-                        <i class="fa-solid fa-user-gear text-[10px]"></i> Arthur
-                    </button>
-                    <button onclick="setActiveOperator('Bruno')" class="relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-slate-400" id="optBtnBruno">
-                        <i class="fa-solid fa-user-gear text-[10px]"></i> Bruno
-                    </button>
+                <!-- Fixed Profile Indicator (Replaces Switcher) -->
+                <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 h-9 shadow-inner select-none cursor-pointer hover:border-purple-500/50 transition" onclick="openProfileModal()">
+                    <span class="text-xs font-bold text-slate-400 hidden sm:inline">Olá,</span>
+                    <span id="headerOwnerName" class="text-xs font-black text-purple-400 uppercase tracking-wider">...</span>
                 </div>
 
                 <!-- Active Partner Profile Avatar Button -->
@@ -1216,7 +1234,7 @@
 
         window.onload = async function() {
             loadProfiles();
-            updateOperatorUI();
+            checkDeviceOwner();
             loadProjectsLocal();
             initCharts();
 
@@ -1238,6 +1256,162 @@
             localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profiles));
             updateHeaderAvatar();
             saveToCloud();
+        }
+
+        // DEVICE REGISTRATION LOGIC
+        function checkDeviceOwner() {
+            const owner = localStorage.getItem('wavex_device_owner');
+            if (!owner) {
+                document.getElementById('deviceRegistrationModal').classList.remove('hidden');
+            } else {
+                activeOperator = owner;
+                updateOperatorUI();
+            }
+        }
+
+        function registerDevice(owner) {
+            localStorage.setItem('wavex_device_owner', owner);
+            activeOperator = owner;
+            document.getElementById('deviceRegistrationModal').classList.add('hidden');
+            updateOperatorUI();
+            showToast(`Dispositivo registrado permanentemente para ${owner}!`, 'success');
+            renderProjects();
+        }
+
+        function updateOperatorUI() {
+            const badge = document.getElementById('activeOperatorBadge');
+            if (badge) badge.innerText = activeOperator;
+            
+            const headerName = document.getElementById('headerOwnerName');
+            if (headerName) headerName.innerText = activeOperator;
+
+            const kpiOpLabel = document.getElementById('kpiOperatorInvestedLabel');
+            if (kpiOpLabel) kpiOpLabel.innerText = `Seu Investimento (${activeOperator})`;
+
+            updateHeaderAvatar();
+        }
+
+        function updateHeaderAvatar() {
+            const img = document.getElementById('headerAvatarImg');
+            const init = document.getElementById('headerAvatarInitials');
+            const p = profiles[activeOperator];
+            
+            if (p && p.photo) {
+                img.src = p.photo;
+                img.classList.remove('hidden');
+                init.classList.add('hidden');
+            } else {
+                img.classList.add('hidden');
+                init.classList.remove('hidden');
+                init.innerText = activeOperator ? activeOperator.charAt(0) : 'W';
+            }
+        }
+
+        // PROFILE MODAL FUNCTIONS
+        function openProfileModal() {
+            if(!activeOperator) return;
+            switchProfileTab(activeOperator);
+            openModal('profileModal');
+        }
+
+        function switchProfileTab(op) {
+            currentEditingProfileTab = op;
+            
+            const tabA = document.getElementById('tabProfileArthur');
+            const tabB = document.getElementById('tabProfileBruno');
+            
+            if (op === 'Arthur') {
+                tabA.className = "px-4 py-2 font-bold text-purple-400 border-b-2 border-purple-500";
+                tabB.className = "px-4 py-2 font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-300";
+            } else {
+                tabB.className = "px-4 py-2 font-bold text-purple-400 border-b-2 border-purple-500";
+                tabA.className = "px-4 py-2 font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-300";
+            }
+
+            const p = profiles[op] || { bio: '', photo: '' };
+            document.getElementById('profileModalBio').value = p.bio || '';
+            document.getElementById('profileModalPhotoUrl').value = p.photo || '';
+            
+            updateProfileModalAvatarPreview(p.photo, op);
+            updateProfileStats(op);
+        }
+
+        function updateProfileModalAvatarPreview(url, op) {
+            const img = document.getElementById('profileModalAvatarImg');
+            const init = document.getElementById('profileModalAvatarInitials');
+            if (url) {
+                img.src = url;
+                img.classList.remove('hidden');
+                init.classList.add('hidden');
+            } else {
+                img.classList.add('hidden');
+                init.classList.remove('hidden');
+                init.innerText = op.charAt(0);
+            }
+        }
+
+        function handleProfilePhotoUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                document.getElementById('profileModalPhotoUrl').value = evt.target.result;
+                updateProfileModalAvatarPreview(evt.target.result, currentEditingProfileTab);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function savePartnerProfile(e) {
+            e.preventDefault();
+            const op = currentEditingProfileTab;
+            if(!profiles[op]) profiles[op] = {};
+            profiles[op].bio = document.getElementById('profileModalBio').value;
+            profiles[op].photo = document.getElementById('profileModalPhotoUrl').value;
+            
+            saveProfiles();
+            updateOperatorUI();
+            closeModal('profileModal');
+            showToast("Perfil atualizado com sucesso!", "success");
+        }
+
+        function updateProfileStats(op) {
+            let invested = 0, capReturn = 0, profit = 0;
+            projects.forEach(p => {
+                const calc = calculateProjectTotals(p);
+                if (op === 'Arthur') {
+                    invested += calc.arthurTotalInvested;
+                    if (p.status === 'Vendido') {
+                        capReturn += calc.arthurTotalInvested;
+                        profit += (calc.netProfit / 2);
+                    }
+                } else {
+                    invested += calc.brunoTotalInvested;
+                    if (p.status === 'Vendido') {
+                        capReturn += calc.brunoTotalInvested;
+                        profit += (calc.netProfit / 2);
+                    }
+                }
+            });
+
+            document.getElementById('statPartnerInvested').innerText = formatBRL(invested);
+            document.getElementById('statPartnerCapitalReturn').innerText = formatBRL(capReturn);
+            document.getElementById('statPartnerProfit').innerText = formatBRL(profit);
+            document.getElementById('statPartnerTotalReceived').innerText = formatBRL(capReturn + profit);
+        }
+
+        function setOperatorFilter(mode) {
+            operatorFilterMode = mode;
+            const btnAll = document.getElementById('filterOpALL');
+            const btnMy = document.getElementById('filterOpMY');
+
+            if (mode === 'ALL') {
+                btnAll.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition";
+                btnMy.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
+            } else {
+                btnMy.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition";
+                btnAll.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
+            }
+            renderProjects();
         }
 
         // DATA SYNC WITH SUPABASE CLOUD & LOCALSTORAGE
