@@ -49,6 +49,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS Client v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -145,6 +147,12 @@
                         <span id="headerAvatarInitials">A</span>
                     </div>
                 </button>
+
+                <!-- Supabase Realtime Status Badge -->
+                <div id="cloudSyncBadge" class="hidden sm:flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold shadow-md shadow-emerald-950">
+                    <i class="fa-solid fa-cloud text-emerald-400 animate-pulse"></i>
+                    <span id="cloudSyncText">Supabase Sync</span>
+                </div>
 
                 <!-- Add Product CTA -->
                 <button onclick="openWizardModal()" class="bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-lg shadow-purple-900/40 transition duration-300 hover:scale-105 flex items-center gap-2">
@@ -1169,6 +1177,19 @@
         const STORAGE_KEY = 'wavex_business_v7';
         const PROFILE_STORAGE_KEY = 'wavex_profiles_v7';
 
+        // SUPABASE CREDENTIALS & INITIALIZATION
+        const SUPABASE_URL = 'https://llewwextqponyoyupgca.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_I88eoEnldlU8p6KhdnIBKQ_Zfyg5e3I';
+
+        let supabaseClient = null;
+        try {
+            if (window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+            }
+        } catch (err) {
+            console.warn('Supabase initialization failed:', err);
+        }
+
         let activeOperator = localStorage.getItem('wavex_active_operator') || 'Arthur';
         let operatorFilterMode = 'ALL';
         
@@ -1193,12 +1214,18 @@
         let fsActivePhotoIndex = 0;
         let fsCurrentProject = null;
 
-        window.onload = function() {
+        window.onload = async function() {
             loadProfiles();
             updateOperatorUI();
-            loadProjects();
-            renderProjects();
+            loadProjectsLocal();
             initCharts();
+
+            if (supabaseClient) {
+                await loadFromCloud();
+                subscribeToRealtime();
+            } else {
+                renderProjects();
+            }
         };
 
         // PROFILE SYSTEM LOGIC
@@ -1210,160 +1237,105 @@
         function saveProfiles() {
             localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profiles));
             updateHeaderAvatar();
+            saveToCloud();
         }
 
-        function updateHeaderAvatar() {
-            const p = profiles[activeOperator] || {};
-            const img = document.getElementById('headerAvatarImg');
-            const initials = document.getElementById('headerAvatarInitials');
-
-            if (p.photo) {
-                img.src = p.photo;
-                img.classList.remove('hidden');
-                initials.classList.add('hidden');
-            } else {
-                img.classList.add('hidden');
-                initials.innerText = activeOperator.charAt(0);
-                initials.classList.remove('hidden');
-            }
-        }
-
-        function openProfileModal() {
-            switchProfileTab(activeOperator);
-            openModal('profileModal');
-        }
-
-        function switchProfileTab(name) {
-            currentEditingProfileTab = name;
-            const tabA = document.getElementById('tabProfileArthur');
-            const tabB = document.getElementById('tabProfileBruno');
-
-            if (name === 'Arthur') {
-                tabA.className = "px-4 py-2 font-bold text-purple-400 border-b-2 border-purple-500";
-                tabB.className = "px-4 py-2 font-bold text-slate-400 border-b-2 border-transparent";
-            } else {
-                tabB.className = "px-4 py-2 font-bold text-purple-400 border-b-2 border-purple-500";
-                tabA.className = "px-4 py-2 font-bold text-slate-400 border-b-2 border-transparent";
-            }
-
-            const prof = profiles[name] || {};
-            document.getElementById('profileModalPhotoUrl').value = prof.photo || '';
-            document.getElementById('profileModalBio').value = prof.bio || '';
-
-            const img = document.getElementById('profileModalAvatarImg');
-            const initials = document.getElementById('profileModalAvatarInitials');
-            if (prof.photo) {
-                img.src = prof.photo;
-                img.classList.remove('hidden');
-                initials.classList.add('hidden');
-            } else {
-                img.classList.add('hidden');
-                initials.innerText = name.charAt(0);
-                initials.classList.remove('hidden');
-            }
-
-            // Calculate partner detailed cumulative stats
-            let totalInv = 0, capitalReturn = 0, totalProf = 0;
-            projects.forEach(p => {
-                const calc = calculateProjectTotals(p);
-                if (name === 'Arthur') {
-                    totalInv += calc.arthurTotalInvested;
-                    if (p.status === 'Vendido') {
-                        capitalReturn += calc.arthurTotalInvested;
-                        totalProf += (calc.netProfit / 2);
-                    }
-                } else {
-                    totalInv += calc.brunoTotalInvested;
-                    if (p.status === 'Vendido') {
-                        capitalReturn += calc.brunoTotalInvested;
-                        totalProf += (calc.netProfit / 2);
-                    }
-                }
-            });
-
-            document.getElementById('statPartnerInvested').innerText = formatBRL(totalInv);
-            document.getElementById('statPartnerCapitalReturn').innerText = formatBRL(capitalReturn);
-            document.getElementById('statPartnerProfit').innerText = formatBRL(totalProf);
-            document.getElementById('statPartnerTotalReceived').innerText = formatBRL(capitalReturn + totalProf);
-        }
-
-        function handleProfilePhotoUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById('profileModalPhotoUrl').value = evt.target.result;
-                    document.getElementById('profileModalAvatarImg').src = evt.target.result;
-                    document.getElementById('profileModalAvatarImg').classList.remove('hidden');
-                    document.getElementById('profileModalAvatarInitials').classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function savePartnerProfile(e) {
-            e.preventDefault();
-            profiles[currentEditingProfileTab] = {
-                photo: document.getElementById('profileModalPhotoUrl').value,
-                bio: document.getElementById('profileModalBio').value
-            };
-            saveProfiles();
-            closeModal('profileModal');
-            showToast("Perfil do sócio atualizado!", "success");
-        }
-
-        // OPERATOR SWITCHER
-        function setActiveOperator(name) {
-            activeOperator = name;
-            localStorage.setItem('wavex_active_operator', name);
-            updateOperatorUI();
-            renderProjects();
-            showToast(`Sessão operando como: ${activeOperator}`, 'info');
-        }
-
-        function updateOperatorUI() {
-            const pill = document.getElementById('operatorPill');
-            const btnArthur = document.getElementById('optBtnArthur');
-            const btnBruno = document.getElementById('optBtnBruno');
-            const badge = document.getElementById('activeOperatorBadge');
-            const kpiLabel = document.getElementById('kpiOperatorInvestedLabel');
-
-            if (badge) badge.innerText = activeOperator;
-            if (kpiLabel) kpiLabel.innerText = `Seu Investimento (${activeOperator})`;
-
-            if (activeOperator === 'Arthur') {
-                pill.style.transform = 'translateX(0%)';
-                btnArthur.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-white";
-                btnBruno.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
-            } else {
-                pill.style.transform = 'translateX(100%)';
-                btnBruno.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-white";
-                btnArthur.className = "relative z-10 w-1/2 text-center font-bold transition duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
-            }
-
-            updateHeaderAvatar();
-        }
-
-        function setOperatorFilter(mode) {
-            operatorFilterMode = mode;
-            document.getElementById('filterOpALL').className = mode === 'ALL' ? 
-                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition" :
-                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
-            document.getElementById('filterOpMY').className = mode === 'MY' ? 
-                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white shadow-md shadow-purple-950 transition" :
-                "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
-            renderProjects();
-        }
-
-        // DATA PERSISTENCE
-        function loadProjects() {
+        // DATA SYNC WITH SUPABASE CLOUD & LOCALSTORAGE
+        function loadProjectsLocal() {
             const data = localStorage.getItem(STORAGE_KEY);
-            projects = data ? JSON.parse(data) : [];
+            if (data) projects = JSON.parse(data);
         }
 
         function saveProjects() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
             renderProjects();
+            saveToCloud();
+        }
+
+        async function saveToCloud() {
+            if (!supabaseClient) return;
+            try {
+                const payload = { projects, profiles };
+                const { error } = await supabaseClient
+                    .from('wavex_store')
+                    .upsert({ id: 'main_state', payload, updated_at: new Date().toISOString() });
+
+                if (error) {
+                    console.error('Erro ao salvar no Supabase:', error);
+                    updateCloudBadge(false);
+                } else {
+                    updateCloudBadge(true);
+                }
+            } catch (err) {
+                console.error('Erro de conexão Supabase:', err);
+                updateCloudBadge(false);
+            }
+        }
+
+        async function loadFromCloud() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('wavex_store')
+                    .select('payload')
+                    .eq('id', 'main_state')
+                    .single();
+
+                if (data && data.payload) {
+                    if (data.payload.projects) projects = data.payload.projects;
+                    if (data.payload.profiles) profiles = data.payload.profiles;
+                    
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+                    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profiles));
+                    
+                    updateHeaderAvatar();
+                    renderProjects();
+                    updateCloudBadge(true);
+                }
+            } catch (err) {
+                console.warn('Falha no carregamento inicial cloud:', err);
+                updateCloudBadge(false);
+            }
+        }
+
+        function subscribeToRealtime() {
+            if (!supabaseClient) return;
+            try {
+                supabaseClient
+                    .channel('public:wavex_store')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'wavex_store' }, payload => {
+                        if (payload.new && payload.new.payload) {
+                            const newPayload = payload.new.payload;
+                            if (newPayload.projects) projects = newPayload.projects;
+                            if (newPayload.profiles) profiles = newPayload.profiles;
+
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+                            localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profiles));
+
+                            updateHeaderAvatar();
+                            renderProjects();
+                            updateCloudBadge(true);
+                            showToast("Dados sincronizados via Supabase Realtime! ☁️", "info");
+                        }
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.warn('Erro ao conectar ao Realtime Supabase:', err);
+            }
+        }
+
+        function updateCloudBadge(connected) {
+            const badge = document.getElementById('cloudSyncBadge');
+            const text = document.getElementById('cloudSyncText');
+            if (!badge) return;
+
+            if (connected) {
+                badge.className = "hidden sm:flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold shadow-md shadow-emerald-950";
+                if (text) text.innerText = "Supabase Sync";
+            } else {
+                badge.className = "hidden sm:flex items-center gap-1.5 bg-amber-950/80 border border-amber-500/40 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold shadow-md";
+                if (text) text.innerText = "Modo Offline / Local";
+            }
         }
 
         function createLog(action, detail) {
